@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { type Request, type Response } from 'express';
 import cors from 'cors';
 import db from './db.js';
 import path from 'path';
@@ -12,12 +12,12 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '../../client/dist')));
 
-app.get('/api/health', async (_req, res) => {
+app.get('/api/health', async (_req: Request, res: Response): Promise<void> => {
     await db.command({ ping: 1 });
     res.json({ status: 'ok', db: 'connected' });
 });
 
-app.get('/{*path}', (_req, res) => {
+app.get('/{*path}', (_req: Request, res: Response): void => {
     res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
 
