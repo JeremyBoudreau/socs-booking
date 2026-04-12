@@ -66,6 +66,7 @@ const Login: React.FC = () => {
         </header>
 
         <main className="user-main">
+          {/* LEFT */}
           <section className="user-left">
             <h1>
               Welcome <br />
