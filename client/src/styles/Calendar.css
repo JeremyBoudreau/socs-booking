@@ -1,0 +1,46 @@
+.calendar-container {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+/* remove default ugly borders */
+.react-calendar {
+  border: none;
+  width: 100%;
+}
+
+/* center day numbers */
+.react-calendar__tile {
+  position: relative;
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* hover effect */
+.react-calendar__tile:hover {
+  background: #f3f3f3;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* today's date */
+.react-calendar__tile--now {
+  font-weight: bold;
+  background: transparent;
+}
+
+/* selected date (optional) */
+.react-calendar__tile--active {
+  background: rgba(214, 31, 44, 0.1);
+  border-radius: 8px;
+}
+
+/* blue dot under dates */
+.calendar-dot {
+  width: 6px;
+  height: 6px;
+  background: #3b82f6;
+  border-radius: 50%;
+  margin: 2px auto 0;
+}

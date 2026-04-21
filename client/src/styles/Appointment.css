@@ -1,0 +1,79 @@
+.appointments-box {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+}
+
+.appointments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    color: #b9b9b9;
+}
+
+.appointments-header a {
+    color: #d61f2c;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.appointment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 0;
+    border-top: 1px solid #eee;
+    background: #ffffff;
+}
+
+.appointment-date {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-weight: bold;
+    margin-left: 16px
+}
+
+.appointment-date .month {
+    color: #d61f2c;
+    font-size: 14px;
+    align-items: center;
+}
+
+.appointment-date .day {
+    color: #000000;
+    font-size: 20px;
+}
+
+.appointment-info {
+    flex: 1;
+    margin-left: 16px;
+}
+
+.title {
+    color: #000000;
+    font-size: 16px;
+}
+
+.info {
+    font-size: 16px;
+    color: #9a9a9a;
+}
+
+.appointment-action {
+    width: 72px;
+    aspect-ratio: 48 / 36;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    background-color: #ffffff;
+}
+
+.appointment-action:hover {
+    background-color: #d61f2c;
+    color: #ffffff;
+}
