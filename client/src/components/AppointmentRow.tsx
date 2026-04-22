@@ -1,17 +1,25 @@
 import "../styles/Appointment.css";
+import type { Slot } from "../types";
 
-export default function AppointmentRow() {
+type Props = { slot: Slot };
+
+export default function AppointmentRow(props: Props) {
+    const slot = props.slot;
+    const date = new Date(slot.date);
+    const month = date.toLocaleString("default", { month: "short" }).toUpperCase();
+    const day = date.getDate();
+
     return (
         <div className="appointment-row">
             <div className="appointment-date">
-                <div className="month">OCT</div>
-                <div className="day">24</div>
+                <div className="month">{month}</div>
+                <div className="day">{day}</div>
             </div>
 
             <div className="appointment-info">
-                <div className="title">Prof. Foo - Office Hours</div>
-                <div className="info">10:00 - 10:30</div>
-                <div className="info">Leacock 132</div>
+                <div className="title">{slot.ownerEmail} - {slot.type}</div>
+                <div className="info">{slot.time}</div>
+                <div className="info">{slot.course}</div>
             </div>
 
             <button className="appointment-action">

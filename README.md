@@ -11,13 +11,13 @@ ssh -L 27017:localhost:27017 cs307-user@winter2026-comp307
 
 Then create another terminal panel, and run:
 ```sh
-cd ~/socs-booking/client/
+cd client/
 npm run dev
 ```
 
 Then create another terminal panel, and run:
 ```sh
-cd ~/socs-booking/server/
+cd server/
 npm run dev
 ```
 

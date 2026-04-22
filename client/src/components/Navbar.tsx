@@ -4,8 +4,8 @@ import "../styles/Navbar.css";
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const stored = localStorage.getItem("user");
-  const user = stored ? JSON.parse(stored) as { firstName: string; lastName: string; role: string } : null;
+  const storedUser = localStorage.getItem("user");
+  const user = storedUser ? JSON.parse(storedUser) as { firstName: string; lastName: string; role: string } : null;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
