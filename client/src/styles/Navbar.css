@@ -8,6 +8,43 @@
   border-bottom: 1px solid #bfbfbf;
 }
 
+.navbar-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.navbar-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  color: #555;
+  font-weight: 600;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0; 
+  border: 2px solid #a0a0a0; 
+}
+
+.navbar-role {
+  background-color: #e8f0fe;
+  color: #3b6fd4;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+
+.navbar-role.owner {
+  background-color: #fde8e8;
+  color: #d61f2c;
+}
+
 .navbar-left {
   display: flex;
   align-items: center;
@@ -46,7 +83,7 @@
 
 .navbar-name {
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 400;
   color: #111111;
 }
 
@@ -55,7 +92,7 @@
   border: none;
   cursor: pointer;
   font-size: 18px;
-  font-weight: 700;
+  font-weight: 400;
   color: #111111;
   padding: 0;
 }

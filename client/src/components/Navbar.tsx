@@ -13,6 +13,21 @@ const Navbar: React.FC = () => {
     navigate("/login");
   };
 
+  const getInitials = () => { 
+    if (!user) return ""; 
+    return `${user.firstName[0]}${user.lastName[0]}`.toUpperCase();
+  }; 
+
+  const capitalizeName = (name: string) => {
+    return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+  }
+
+  const displayRole = (role: string) => {
+    if (role === "owner") return "OWNER";
+    return "STUDENT";
+  };
+
+
   return (
     <header className="navbar">
       <Link to="/" className="navbar-left">
@@ -21,13 +36,13 @@ const Navbar: React.FC = () => {
       </Link>
 
       <nav className="navbar-links">
-        <Link to="/">Home</Link>
         {user ? (
-          <>
-            <Link to="/dashboard">Dashboard</Link>
-            <span className="navbar-name">{user.firstName} {user.lastName}</span>
-            <button className="navbar-logout" onClick={handleLogout}>Sign Out</button>
-          </>
+          <div className="navbar-user">
+            <div className="navbar-icon">{getInitials()}</div>
+            <span className="navbar-name">{capitalizeName(user.firstName)} {capitalizeName(user.lastName)}</span>
+            <span className={`navbar-role ${user.role === "owner" ? "owner" : ""}`}>{displayRole(user.role.toUpperCase())}</span>
+            <button className="navbar-logout" onClick={handleLogout}>Logout</button>
+          </div>
         ) : (
           <>
             <Link to="/login">Sign In</Link>
