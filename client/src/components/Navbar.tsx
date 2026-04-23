@@ -40,7 +40,7 @@ const Navbar: React.FC = () => {
           <div className="navbar-user">
             <div className="navbar-icon">{getInitials()}</div>
             <span className="navbar-name">{capitalizeName(user.firstName)} {capitalizeName(user.lastName)}</span>
-            <span className={`navbar-role ${user.role === "owner" ? "owner" : ""}`}>{displayRole(user.role.toUpperCase())}</span>
+            <span className={`navbar-role ${user.role === "owner" ? "owner" : ""}`}>{displayRole(user.role)}</span>
             <button className="navbar-logout" onClick={handleLogout}>Logout</button>
           </div>
         ) : (
