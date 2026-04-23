@@ -67,7 +67,7 @@
 .navbar-links {
   display: flex;
   gap: 36px;
-  flex-wrap: wrap;
+  align-items: center;
 }
 
 .navbar-links a {

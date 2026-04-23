@@ -4,7 +4,7 @@
   min-height: 100vh;
 }
 
-.user-container {
+.dashboard-container {
   display: flex;
   flex-direction: row;
   flex: 1;

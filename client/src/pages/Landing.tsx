@@ -4,7 +4,7 @@ import "../styles/Home.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
-const HomePage: React.FC = () => {
+const Landing: React.FC = () => {
   const isLoggedIn = !!localStorage.getItem("token");
   const featureCards = [
     {
@@ -89,4 +89,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default Landing;

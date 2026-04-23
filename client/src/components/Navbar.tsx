@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
 
   return (
     <header className="navbar">
-      <Link to="/" className="navbar-left">
+      <Link to={user ? "/dashboard" : "/"} className="navbar-left">
         <img src="/mcgill-logo.png" alt="McGill logo" className="navbar-logo" />
         <span className="navbar-title">| SOCS Connect</span>
       </Link>
