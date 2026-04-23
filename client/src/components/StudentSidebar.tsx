@@ -9,7 +9,7 @@ const getLinkClass = ({ isActive }: { isActive: boolean }) => {
   }
 };
 
-export default function Sidebar() {
+export default function StudentSidebar() {
   return (
     <div className="sidebar">
       <div className="menu-label">MENU</div>
@@ -20,7 +20,11 @@ export default function Sidebar() {
         </NavLink>
 
         <NavLink to="/professors" className={getLinkClass}>
-          Browse Professors & TAs
+          Browse by Professors & TAs
+        </NavLink>
+
+        <NavLink to="/courses" className={getLinkClass}>
+          Browse by Courses
         </NavLink>
 
         <NavLink to="/appointments" className={getLinkClass}>

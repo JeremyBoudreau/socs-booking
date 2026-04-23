@@ -24,8 +24,8 @@ const dummySlot: Slot = {
 
 export default function Appointments(props: Props) {
   return (
-    <div className="appointments-box">
-      <div className="appointments-header">
+    <div className="outer-box">
+      <div className="outer-header">
         <h3>Upcoming Appointments</h3>
         <a href="/appointments">View all</a>
       </div>

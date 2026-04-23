@@ -16,12 +16,14 @@ export default function OwnerRequestRow({ request }: Props) {
   }
 
   return (
-    <div className="appointment-row">
-      <div className="navbar-icon">{initials}</div>
+    <div className="inner-row">
+      <div className="row-left">
+        <div className="navbar-icon">{initials}</div>
 
-      <div className="appointment-info">
-        <div className="title">{request.createdBy.name}</div>
-        <div className="info message">{request.message}</div>
+        <div className="inner-info">
+          <div className="title">{request.createdBy.name}</div>
+          <div className="info message">{request.message}</div>
+        </div>
       </div>
 
       <div className="grouped-actions">

@@ -12,18 +12,20 @@ export default function AppointmentRow(props: Props) {
   const day = date.getDate();
 
   return (
-    <div className="appointment-row">
-      <div className="appointment-date">
-        <div className="month">{month}</div>
-        <div className="day">{day}</div>
-      </div>
-
-      <div className="appointment-info">
-        <div className="title">
-          {slot.ownerName} - {slot.type}
+    <div className="inner-row">
+      <div className="row-left">
+        <div className="appointment-date">
+          <div className="month">{month}</div>
+          <div className="day">{day}</div>
         </div>
-        <div className="info">{slot.time}</div>
-        <div className="info">{slot.course}</div>
+
+        <div className="inner-info">
+          <div className="title">
+            {slot.ownerName} - {slot.type}
+          </div>
+          <div className="info">{slot.time}</div>
+          <div className="info">{slot.course}</div>
+        </div>
       </div>
 
       <div className="grouped-actions">

@@ -21,7 +21,7 @@ export type RequestSlot = {
   date: string;
   time: string;
   type: string;
-  status: "Pending" | "Denied" | "Confirmed";
+  status: "pending" | "denied" | "confirmed";
   createdBy: { userId: string; name: string; email: string };
   createdAt: string;
   message: string;

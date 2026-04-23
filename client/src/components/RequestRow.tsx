@@ -6,7 +6,7 @@ type Props = { request: RequestSlot };
 
 export default function RequestRow({ request }: Props) {
   let initials = "";
-  const isPending = request.status === "Pending";
+  const isPending = request.status === "pending";
 
   if (request.ownerName) {
     const parts = request.ownerName.split(" ");
@@ -30,25 +30,28 @@ export default function RequestRow({ request }: Props) {
   };
 
   return (
-    <div className="appointment-row">
-      <div className="navbar-icon">{initials}</div>
+    <div className="inner-row">
+      <div className="row-left">
+        <div className="navbar-icon">{initials}</div>
 
-      <div className="appointment-info">
-        <div className="title">
-          {request.ownerName} | {request.status}
+        <div className="inner-info">
+          <div className="title">{request.ownerName}</div>
+          <div className="info message">{request.message}</div>
         </div>
-        <div className="info message">{request.message}</div>
       </div>
 
-      <div className="grouped-actions">
-        <button className="button blue">✉</button>
+      <div className="row-right">
+        <div className={`status ${request.status}`}>{request.status}</div>
+        <div className="grouped-actions">
+          <button className="button blue">✉</button>
 
-        <button
-          onClick={handleAction}
-          className={isPending ? "button red" : "button green"}
-        >
-          {isPending ? "✕" : "✓"}
-        </button>
+          <button
+            onClick={handleAction}
+            className={isPending ? "button red" : "button green"}
+          >
+            {isPending ? "✕" : "✓"}
+          </button>
+        </div>
       </div>
     </div>
   );

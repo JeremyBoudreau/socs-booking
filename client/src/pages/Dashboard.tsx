@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Sidebar from "../components/Sidebar";
+import StudentSidebar from "../components/StudentSidebar";
 import InfoUpcomingAppointments from "../components/Info-UpcomingAppointments";
+import MySlots from "../components/MySlots";
+import InfoActiveSlots from "../components/Info-ActiveSlots";
+import type { RequestSlot } from "../types";
+import type { Slot } from "../types";
 import InfoPendingRequests from "../components/Info-PendingRequests";
 import InfoConfirmed from "../components/Info-Confirmed";
 import Appointments from "../components/Appointments";
 import Calendar from "../components/Calendar";
 import Requests from "../components/Requests";
 import OwnerRequests from "../components/OwnerRequests";
+import InviteLinkButton from "../components/InviteLinkButton";
 import { authFetch } from "../utils/fetch";
 import "../styles/Dashboard.css";
-import type { RequestSlot } from "../types";
-import InfoActiveSlots from "../components/Info-ActiveSlots";
 
 const dummyRequests: RequestSlot[] = [
   {
@@ -24,7 +27,7 @@ const dummyRequests: RequestSlot[] = [
     date: "2026-04-25",
     time: "14:00",
     type: "office-hours",
-    status: "Pending",
+    status: "pending",
     createdBy: {
       userId: "user456",
       name: "John Doe",
@@ -43,7 +46,7 @@ const dummyRequests: RequestSlot[] = [
     date: "2026-04-26",
     time: "10:00",
     type: "review",
-    status: "Confirmed",
+    status: "confirmed",
     createdBy: {
       userId: "user789",
       name: "Emma Brown",
@@ -52,6 +55,39 @@ const dummyRequests: RequestSlot[] = [
     createdAt: new Date().toISOString(),
     message:
       "Could you help me review dynamic programming? I want to make sure I'm ready for the midterm.",
+  },
+];
+
+const dummySlots: Slot[] = [
+  {
+    _id: "slot1",
+    ownerId: "owner123",
+    ownerName: "Prof. Smith",
+    ownerEmail: "smith@mcgill.ca",
+    course: "COMP 307",
+    date: "2026-04-25",
+    time: "10:00-11:00",
+    type: "Recurring",
+    status: "active",
+    bookedBy: null,
+    createdAt: new Date().toISOString(),
+  },
+  {
+    _id: "slot2",
+    ownerId: "owner123",
+    ownerName: "Prof. Smith",
+    ownerEmail: "smith@mcgill.ca",
+    course: "COMP 307",
+    date: "2026-04-26",
+    time: "14:00-15:00",
+    type: "Single",
+    status: "booked",
+    bookedBy: {
+      userId: "user456",
+      name: "John Doe",
+      email: "john@example.com",
+    },
+    createdAt: new Date().toISOString(),
   },
 ];
 
@@ -81,7 +117,7 @@ const Dashboard: React.FC = () => {
     <div className="user-page">
       <Navbar />
       <div className="user-container">
-        <Sidebar />
+        <StudentSidebar />
         <div className="dashboard-content">
           <div className="dashboard-info">
             <InfoUpcomingAppointments count={3} />
@@ -97,6 +133,8 @@ const Dashboard: React.FC = () => {
       <Requests requests={dummyRequests} />
       <OwnerRequests requests={dummyRequests} />
       <InfoActiveSlots count={3} />
+      <MySlots slots={dummySlots} />
+      <InviteLinkButton />
       <Footer />
     </div>
   );

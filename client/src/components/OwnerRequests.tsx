@@ -6,8 +6,8 @@ type Props = { requests: RequestSlot[] };
 
 export default function PendingRequests({ requests }: Props) {
   return (
-    <div className="appointments-box">
-      <div className="appointments-header">
+    <div className="outer-box">
+      <div className="outer-header">
         <h3>Pending Requests</h3>
         <a href="/requests">View all</a>
       </div>
