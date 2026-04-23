@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 import Navbar from "../components/Navbar";
@@ -20,6 +20,14 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, []);
 
   const todaySlots: Slot[] = [
     {
@@ -86,9 +94,9 @@ const Login: React.FC = () => {
               <span className="red-text">SOCS Connect.</span>
             </h1>
 
-
             <p className="user-subtext">
-              Book or host office hours, request meetings, and manage appointments. All in one place.
+              Book or host office hours, request meetings, and manage
+              appointments. All in one place.
             </p>
 
             <h3 className="user-side-heading">AVAILABLE TODAY</h3>
@@ -130,7 +138,8 @@ const Login: React.FC = () => {
                 />
 
                 <p className="user-input-note">
-                  Only email addresses with the domain names @mail.mcgill.ca or @mcgill.ca are valid.
+                  Only email addresses with the domain names @mail.mcgill.ca or
+                  @mcgill.ca are valid.
                 </p>
 
                 <label>Password</label>
@@ -154,8 +163,6 @@ const Login: React.FC = () => {
                   Sign Up
                 </Link>
               </p>
-
-
             </div>
           </section>
         </main>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../styles/Register.css";
 import Navbar from "../components/Navbar";
@@ -12,6 +12,14 @@ const Register: React.FC = () => {
   const [role, setRole] = useState("student");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, []);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     // prevent page reload on form submit, and reset any previous error
@@ -52,7 +60,8 @@ const Register: React.FC = () => {
             </h1>
 
             <p className="user-subtext">
-              Join SOCS Connect to book or host office hours, request meetings, and coordinate group schedules.
+              Join SOCS Connect to book or host office hours, request meetings,
+              and coordinate group schedules.
             </p>
 
             <h3 className="user-side-heading">TWO TYPES OF ACCOUNTS</h3>

@@ -4,12 +4,12 @@ type Props = {
   count: number;
 };
 
-export default function InfoConfirmed({ count }: Props) {
+export default function InfoActiveSlots({ count }: Props) {
   return (
     <div className="info-card">
-      <div className="info-text">Requests</div>
+      <div className="info-text">Active slots</div>
       <div className="info-number">{count}</div>
-      <div className="info-text">confirmed</div>
+      <div className="info-text">this week</div>
     </div>
   );
 }

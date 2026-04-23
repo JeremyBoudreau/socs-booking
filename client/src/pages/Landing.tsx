@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 
 const Landing: React.FC = () => {
   const isLoggedIn = !!localStorage.getItem("token");
+
   const featureCards = [
     {
       number: "1",
@@ -48,7 +49,7 @@ const Landing: React.FC = () => {
               </p>
 
               <div className="home-buttons">
-                <Link to="/register">
+                <Link to={isLoggedIn ? "/dashboard" : "/register"}>
                   <button>Get Started</button>
                 </Link>
                 <Link to={isLoggedIn ? "/dashboard" : "/login"}>
@@ -58,10 +59,7 @@ const Landing: React.FC = () => {
             </div>
 
             <div className="home-image">
-              <img
-                src="/mcgill-building.jpg"
-                alt="McGill campus building"
-              />
+              <img src="/mcgill-building.jpg" alt="McGill campus building" />
             </div>
           </section>
 

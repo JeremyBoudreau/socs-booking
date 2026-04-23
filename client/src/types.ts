@@ -1,6 +1,7 @@
 export type Slot = {
   _id: string;
   ownerId: string;
+  ownerName: string;
   ownerEmail: string;
   course: string;
   date: string;
@@ -10,3 +11,18 @@ export type Slot = {
   bookedBy: { userId: string; name: string; email: string } | null;
   createdAt: string;
 };
+
+export type RequestSlot = {
+  _id: string;
+  ownerId: string;
+  ownerName: string;
+  ownerEmail: string;
+  course: string;
+  date: string;
+  time: string;
+  type: string;
+  status: "Pending" | "Denied" | "Confirmed";
+  createdBy: { userId: string; name: string; email: string };
+  createdAt: string;
+  message: string;
+}
