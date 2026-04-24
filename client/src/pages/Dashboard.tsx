@@ -116,7 +116,7 @@ const Dashboard: React.FC = () => {
   return (
     <div className="user-page">
       <Navbar />
-      <div className="user-container">
+      <div className="dashboard-container">
         <StudentSidebar />
         <div className="dashboard-content">
           <div className="dashboard-info">
