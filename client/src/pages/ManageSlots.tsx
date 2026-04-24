@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import StudentSidebar from "../components/StudentSidebar";
+import Sidebar from "../components/Sidebar";
 import type { Slot } from "../types";
 import { authFetch } from "../utils/fetch";
+import { formatTime } from "../utils/time";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
@@ -30,7 +31,7 @@ const ManageSlots: React.FC = () => {
     setError("");
     const res = await authFetch("/api/slots", {
       method: "POST",
-      body: JSON.stringify({ course, date, time, type }),
+      body: JSON.stringify({ course: `COMP ${course}`, date, time, type }),
     });
     if (!res.ok) {
       const data = await res.json();
@@ -62,7 +63,7 @@ const ManageSlots: React.FC = () => {
     <div className="user-page">
       <Navbar />
       <div className="dashboard-container">
-        <StudentSidebar />
+        <Sidebar />
         <div className="dashboard-content">
 
           <div className="outer-box">
@@ -72,7 +73,17 @@ const ManageSlots: React.FC = () => {
             <form onSubmit={handleCreate} style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "flex-end" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 <label>Course</label>
-                <input value={course} onChange={e => setCourse(e.target.value)} placeholder="COMP XXX" required />
+                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                  <span style={{ fontWeight: 600 }}>COMP</span>
+                  <input
+                    value={course}
+                    onChange={e => setCourse(e.target.value.replace(/\D/g, "").slice(0, 3))}
+                    placeholder="307"
+                    maxLength={3}
+                    style={{ width: "60px" }}
+                    required
+                  />
+                </div>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
                 <label>Date</label>
@@ -102,30 +113,36 @@ const ManageSlots: React.FC = () => {
             {slots.length === 0 && <p style={{ color: "#b9b9b9" }}>No slots yet.</p>}
             {slots.map(slot => {
               const date = new Date(slot.date);
-              const day = date.toLocaleString("default", { weekday: "short" });
+              const month = date.toLocaleString("default", { month: "short" }).toUpperCase();
+              const day = date.getDate();
               return (
-                <div key={slot._id} className="inner-row">
-                  <div className="appointment-info">
-                    <div className="title">{slot.type} | {day} {slot.time}</div>
-                    <div className="info">{slot.course} · {slot.date}</div>
-                    {slot.bookedBy && <div className="info">Booked by: {slot.bookedBy.name} ({slot.bookedBy.email})</div>}
+                <div key={slot._id} className="slot-row">
+                  <div className="row-left">
+                    <div className="slot-row-date">
+                      <span className="month">{month}</span>
+                      <span className="day">{day}</span>
+                    </div>
+                    <div className="appointment-info" style={{ marginLeft: "12px" }}>
+                      <div className="title">{slot.course.toUpperCase()} · {slot.type}</div>
+                      <div className="info">{formatTime(slot.time)}{slot.bookedBy && ` · Booked by ${slot.bookedBy.name}`}</div>
+                    </div>
                   </div>
-                  <select
-                    className={`status ${slot.status}`}
-                    value={slot.status}
-                    disabled={slot.status !== "private"}
-                    onChange={() => handleActivate(slot._id)}
-                    style={{ cursor: slot.status === "private" ? "pointer" : "default", border: "none", appearance: "none", width: "auto", minWidth: "fit-content", padding: "6px 12px" }}
-                  >
-                    <option value="private">Private</option>
-                    <option value="active">Active</option>
-                    {slot.status === "booked" && <option value="booked">Booked</option>}
-                  </select>
                   <div className="grouped-actions">
+                    <select
+                      className={`status ${slot.status}`}
+                      value={slot.status}
+                      disabled={slot.status !== "private"}
+                      onChange={() => handleActivate(slot._id)}
+                      style={{ cursor: slot.status === "private" ? "pointer" : "default", border: "none", appearance: "none", width: "auto", minWidth: "fit-content", padding: "6px 12px" }}
+                    >
+                      <option value="private">Private</option>
+                      <option value="active">Active</option>
+                      {slot.status === "booked" && <option value="booked">Booked</option>}
+                    </select>
                     {slot.bookedBy && (
                       <a href={`mailto:${slot.bookedBy.email}`} className="button blue" style={{ textDecoration: "none" }}>✉</a>
                     )}
-                    <button className="button red" onClick={() => handleDelete(slot)}>✕</button>
+                    <button className="button red" onClick={() => handleDelete(slot)}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4h6v2"/></svg></button>
                   </div>
                 </div>
               );

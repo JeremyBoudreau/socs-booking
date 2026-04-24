@@ -9,7 +9,7 @@ export default function PendingRequests({ requests }: Props) {
     <div className="outer-box">
       <div className="outer-header">
         <h3>Booking Requests</h3>
-        <a href="/requests">View all</a>
+        <a href="/staff">Book Appointment</a>
       </div>
 
       {requests.map((request) => (

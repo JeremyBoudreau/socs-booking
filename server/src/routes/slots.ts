@@ -22,10 +22,15 @@ router.post("/", authenticateToken, requireOwner, async (req: AuthRequest, res: 
     }
 
     // insert new slot into database with status "private"
+    const users = db.collection("users");
+    const owner = await users.findOne({ _id: new ObjectId(req.user!.userId) });
+    const ownerName = owner ? `${owner["firstName"]} ${owner["lastName"]}` : req.user!.email;
+
     const slots = db.collection("slots");
     const result = await slots.insertOne({
         ownerId: new ObjectId(req.user!.userId),
         ownerEmail: req.user!.email,
+        ownerName,
         course,
         date,
         time,
@@ -92,8 +97,18 @@ router.delete("/:id", authenticateToken, requireOwner, async (req: AuthRequest, 
 // GET /api/slots
 router.get("/", authenticateToken, async (_req: AuthRequest, res: Response): Promise<void> => {
     const slots = db.collection("slots");
+    const users = db.collection("users");
     const activeSlots = await slots.find({ status: "active" }).toArray();
-    res.json(activeSlots);
+
+    const enriched = await Promise.all(activeSlots.map(async (slot) => {
+        if (!slot["ownerName"]) {
+            const owner = await users.findOne({ _id: slot["ownerId"] });
+            if (owner) slot["ownerName"] = `${owner["firstName"]} ${owner["lastName"]}`;
+        }
+        return slot;
+    }));
+
+    res.json(enriched);
 });
 
 // owner sees all their own slots

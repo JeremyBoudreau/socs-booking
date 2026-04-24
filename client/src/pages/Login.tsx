@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../styles/Login.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -20,6 +20,8 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+  const from = (location.state as { from?: string })?.from || "/dashboard";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -77,8 +79,7 @@ const Login: React.FC = () => {
     localStorage.setItem("token", data.token);
     localStorage.setItem("user", JSON.stringify(data.user));
 
-    // redirect user to the dashboard
-    navigate("/dashboard");
+    navigate(from);
   };
 
   return (

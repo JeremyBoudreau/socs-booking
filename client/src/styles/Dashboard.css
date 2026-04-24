@@ -33,6 +33,13 @@
   align-items: start;
 }
 
+.dashboard-left,
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 @media (max-width: 900px) {
   .dashboard-main {
     grid-template-columns: 1fr;

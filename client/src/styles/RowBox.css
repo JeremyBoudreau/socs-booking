@@ -32,6 +32,40 @@
     background: #ffffff;
 }
 
+.slot-row {
+    background-color: #f6f6f6;
+    border: 1px solid #e2e2e2;
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 10px;
+}
+
+.slot-row-date {
+    min-width: 48px;
+    text-align: center;
+    border-right: 1px solid #e0e0e0;
+    padding-right: 12px;
+}
+
+.slot-row-date .month {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #d61f2c;
+}
+
+.slot-row-date .day {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1;
+    color: #111111;
+}
+
 .appointment-date {
     display: flex;
     flex-direction: column;
@@ -81,18 +115,19 @@
 }
 
 .big-button {
-    width:144px;
-    aspect-ratio: 64 /36;
+    width: 100%;
+    padding: 12px 16px;
     border-radius: 8px;
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 8px;
     cursor: pointer;
     border: 1px solid #dddddd;
     background-color: #ffffff;
     transition: 0.2s ease;
     color: #000000;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .red:hover {
@@ -153,13 +188,13 @@
 }
 
 .status.booked {
-    background-color: #fde8e8;
-    color: #d61f2c;
+    background-color: #f3e8ff;
+    color: #7c3aed;
 }
 
 .status.private {
-    background-color: #e8f0fe;
-    color: #4da3ff;
+    background-color: #fde8e8;
+    color: #d61f2c;
 }
 
 .status.confirmed {

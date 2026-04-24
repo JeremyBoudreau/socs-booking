@@ -5,6 +5,8 @@ import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
 import ManageSlots from "./pages/ManageSlots";
+import Staff from "./pages/Staff";
+import StaffProfile from "./pages/StaffProfile";
 
 function App() {
   return (
@@ -26,6 +28,22 @@ function App() {
           element={
             <ProtectedRoute>
               <ManageSlots />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff"
+          element={
+            <ProtectedRoute>
+              <Staff />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/:ownerId"
+          element={
+            <ProtectedRoute>
+              <StaffProfile />
             </ProtectedRoute>
           }
         />

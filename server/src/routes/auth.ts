@@ -116,6 +116,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
         // and know the user's role for authorization purposes
         // without needing to decode the JWT token on the client side
         user: {
+            userId: user._id.toString(),
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
