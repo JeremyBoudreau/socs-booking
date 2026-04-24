@@ -1,0 +1,87 @@
+.poll-box {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+.poll-box h3 {
+    margin-bottom: 14px;
+    color: #b9b9b9;
+    font-weight: 600;
+}
+
+.poll-box label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 6px;
+    font-size: 13px;
+    color: #9a9a9a;
+}
+
+.poll-box input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #e6e6e6;
+    border-radius: 10px;
+    outline: none;
+    font-size: 14px;
+    background: #fafafa;
+    transition: 0.2s ease;
+}
+
+.poll-box input:focus {
+    border-color: #d61f2c;
+    background: #fff;
+}
+
+.poll-slots {
+    margin-top: 12px;
+}
+
+.poll-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.poll-row input[type="date"],
+.poll-row input[type="time"] {
+    flex: 1;
+}
+
+.poll-row button {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid #dddddd;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 18px;
+    color: #555;
+    transition: 0.2s ease;
+}
+
+.poll-row button:hover {
+    background: #d61f2c;
+    color: #ffffff;
+    border-color: #d61f2c;
+}
+
+.create-btn {
+    margin-top: 16px;
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: #d61f2c;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.create-btn:hover {
+    background: #b81a24;
+}

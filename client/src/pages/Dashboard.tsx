@@ -11,14 +11,88 @@ import InfoPendingRequests from "../components/Info-PendingRequests";
 import InfoConfirmed from "../components/Info-Confirmed";
 import Appointments from "../components/Appointments";
 import Calendar from "../components/Calendar";
+import PollManager from "../components/PollManager";
 import Requests from "../components/Requests";
 import OwnerRequests from "../components/OwnerRequests";
 import InviteLinkButton from "../components/InviteLinkButton";
+import CreatePoll from "../components/CreatePoll";
 import { authFetch } from "../utils/fetch";
 import "../styles/Dashboard.css";
 
-const dummyRequests: RequestSlot[] = [
+export const dummyPolls = [
   {
+    _id: "poll1",
+    course: "COMP 307 - Office Hours",
+    slots: [
+      {
+        id: "slot1",
+        start: "2026-04-24T10:00",
+        end: "2026-04-24T11:00",
+        voteCount: 3,
+      },
+      {
+        id: "slot2",
+        start: "2026-04-24T14:00",
+        end: "2026-04-24T15:00",
+        voteCount: 7,
+      },
+      {
+        id: "slot3",
+        start: "2026-04-25T09:00",
+        end: "2026-04-25T10:30",
+        voteCount: 2,
+      },
+    ],
+  },
+
+  {
+    _id: "poll2",
+    course: "COMP 251 - Review Session",
+    slots: [
+      {
+        id: "slot4",
+        start: "2026-04-26T12:00",
+        end: "2026-04-26T13:00",
+        voteCount: 5,
+      },
+      {
+        id: "slot5",
+        start: "2026-04-26T16:00",
+        end: "2026-04-26T17:30",
+        voteCount: 9,
+      },
+    ],
+  },
+
+  {
+    _id: "poll3",
+    course: "COMP 202 - Lab Help",
+    slots: [
+      {
+        id: "slot6",
+        start: "2026-04-27T10:00",
+        end: "2026-04-27T11:30",
+        voteCount: 1,
+      },
+      {
+        id: "slot7",
+        start: "2026-04-27T13:00",
+        end: "2026-04-27T14:00",
+        voteCount: 4,
+      },
+      {
+        id: "slot8",
+        start: "2026-04-27T15:00",
+        end: "2026-04-27T16:00",
+        voteCount: 6,
+      },
+    ],
+  },
+];
+
+const dummyRequests: RequestSlot[] = [
+  /*{
+    
     _id: "req1",
     ownerId: "owner123",
     ownerName: "Alice Smith",
@@ -55,11 +129,12 @@ const dummyRequests: RequestSlot[] = [
     createdAt: new Date().toISOString(),
     message:
       "Could you help me review dynamic programming? I want to make sure I'm ready for the midterm.",
-  },
+  },*/
 ];
 
 const dummySlots: Slot[] = [
-  {
+  /*{
+    
     _id: "slot1",
     ownerId: "owner123",
     ownerName: "Prof. Smith",
@@ -88,7 +163,7 @@ const dummySlots: Slot[] = [
       email: "john@example.com",
     },
     createdAt: new Date().toISOString(),
-  },
+  },*/
 ];
 
 const Dashboard: React.FC = () => {
@@ -135,6 +210,8 @@ const Dashboard: React.FC = () => {
       <InfoActiveSlots count={3} />
       <MySlots slots={dummySlots} />
       <InviteLinkButton />
+      <CreatePoll />
+      <PollManager polls={dummyPolls} />
       <Footer />
     </div>
   );

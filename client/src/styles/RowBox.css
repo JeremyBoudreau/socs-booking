@@ -171,3 +171,12 @@
     background-color: #e8f0fe;
     color: #4da3ff;
 }
+
+.poll-dropdown {
+    margin-top: 6px;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-size: 14px;
+}
