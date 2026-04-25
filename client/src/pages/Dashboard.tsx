@@ -1,70 +1,80 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import StudentSidebar from "../components/StudentSidebar";
-import InfoUpcomingAppointments from "../components/Info-UpcomingAppointments";
+import Sidebar from "../components/Sidebar";
 import MySlots from "../components/MySlots";
-import InfoActiveSlots from "../components/Info-ActiveSlots";
-import InfoPendingRequests from "../components/Info-PendingRequests";
-import InfoConfirmed from "../components/Info-Confirmed";
+import type { Slot } from "../types";
 import Appointments from "../components/Appointments";
-import Calendar from "../components/Calendar";
-import PollManager from "../components/PollManager";
-import Requests from "../components/Requests";
-import OwnerRequests from "../components/OwnerRequests";
-import InviteLinkButton from "../components/InviteLinkButton";
-import CreatePoll from "../components/CreatePoll";
-import PollDemoPage from "../components/PollDemoPage";
+import MySessions from "../components/MySessions";
 import { authFetch } from "../utils/fetch";
 import "../styles/Dashboard.css";
 
 const Dashboard: React.FC = () => {
-  const [slots, setSlots] = useState([]);
+  const [bookedSlots, setBookedSlots] = useState<Slot[]>([]);
+  const [createdSlots, setCreatedSlots] = useState<Slot[]>([]);
   const storedUser = localStorage.getItem("user");
   const user = storedUser
     ? (JSON.parse(storedUser) as {
+        id: string;
         firstName: string;
         lastName: string;
         role: string;
       })
     : null;
 
+  const role = user?.role;
+
+  const fetchAll = useCallback(async () => {
+    const booked = await authFetch("/api/slots/booked");
+    setBookedSlots(await booked.json());
+
+    if (role === "owner") {
+      const created = await authFetch("/api/slots/created");
+      setCreatedSlots(await created.json());
+    }
+  }, [role]);
+
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => {
-    const fetchSlots = async () => {
-      const endpoint =
-        user?.role === "owner" ? "/api/slots/created" : "/api/slots/booked";
-      const res = await authFetch(endpoint);
-      const data = await res.json();
-      setSlots(data);
-    };
-    fetchSlots();
-  }, []);
+    fetchAll();
+  }, [fetchAll]);
 
   return (
     <div className="user-page">
       <Navbar />
       <div className="dashboard-container">
-        <StudentSidebar />
+        <Sidebar />
         <div className="dashboard-content">
-          <div className="dashboard-info">
-            <InfoUpcomingAppointments count={3} />
-            <InfoPendingRequests count={2} />
-            <InfoConfirmed count={1} />
-          </div>
-          <div className="dashboard-main">
-            <Appointments slots={slots} />
-            <Calendar />
+          <div
+            className="dashboard-main"
+            style={user?.role !== "owner" ? { gridTemplateColumns: "1fr" } : {}}
+          >
+            <div className="dashboard-left">
+              <Appointments
+                slots={
+                  user?.role === "owner"
+                    ? [
+                        ...createdSlots.filter((s) => s.status === "booked"),
+                        ...bookedSlots,
+                      ]
+                    : bookedSlots
+                }
+                currentUserId={user?.id}
+                showManageAll={user?.role !== "owner"}
+                readonly
+              />
+            </div>
+            <div className="dashboard-right">
+              {user?.role === "owner" ? (
+                <>
+                  <MySlots slots={createdSlots} />
+                  <MySessions slots={bookedSlots} />
+                </>
+              ) : null}
+            </div>
           </div>
         </div>
       </div>
-      <Requests requests={[]} />
-      <OwnerRequests requests={[]} />
-      <InfoActiveSlots count={3} />
-      <MySlots slots={[]} />
-      <InviteLinkButton />
-      <CreatePoll />
-      <PollManager />
-      <PollDemoPage />
       <Footer />
     </div>
   );

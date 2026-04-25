@@ -4,6 +4,10 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Dashboard from "./pages/Dashboard";
+import ManageSlots from "./pages/ManageSlots";
+import ManageAppointments from "./pages/ManageAppointments";
+import Staff from "./pages/Staff";
+import StaffProfile from "./pages/StaffProfile";
 
 function App() {
   return (
@@ -17,6 +21,38 @@ function App() {
           element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/slots"
+          element={
+            <ProtectedRoute>
+              <ManageSlots />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/appointments"
+          element={
+            <ProtectedRoute>
+              <ManageAppointments />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff"
+          element={
+            <ProtectedRoute>
+              <Staff />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/staff/:ownerId"
+          element={
+            <ProtectedRoute>
+              <StaffProfile />
             </ProtectedRoute>
           }
         />

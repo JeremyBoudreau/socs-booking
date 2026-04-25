@@ -4,14 +4,13 @@ import type { RequestSlot } from "../types";
 
 type Props = { requests: RequestSlot[] };
 
-export default function PendingRequests({ requests }: Props) {
+export default function AppointmentRequests({ requests }: Props) {
   return (
     <div className="outer-box">
       <div className="outer-header">
-        <h3>Requests</h3>
-        <a href="/requests">View all</a>
+        <h3>Booking Requests</h3>
       </div>
-
+      {requests.length === 0 && <p style={{ color: "#b9b9b9" }}>N requests.</p>}
       {requests.map((request) => (
         <RequestRow key={request._id} request={request} />
       ))}

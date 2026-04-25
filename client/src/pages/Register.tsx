@@ -19,7 +19,7 @@ const Register: React.FC = () => {
     if (token) {
       navigate("/dashboard", { replace: true });
     }
-  }, []);
+  }, [navigate]);
 
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     // prevent page reload on form submit, and reset any previous error

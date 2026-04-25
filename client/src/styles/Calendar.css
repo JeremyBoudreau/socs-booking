@@ -4,12 +4,10 @@
   padding: 16px;
 }
 
-
 .react-calendar {
   border: none;
   width: 100%;
 }
-
 
 .react-calendar__tile {
   position: relative;
@@ -17,12 +15,10 @@
   padding: 10px 0;
 }
 
-
 .react-calendar__tile--active {
   background: rgba(214, 31, 44, 0.1);
   border-radius: 8px;
 }
-
 
 .calendar-dot {
   width: 6px;
@@ -33,7 +29,7 @@
 }
 
 .react-calendar__tile--now {
-  background: #e7e7e7; 
+  background: #e7e7e7;
   border-radius: 8px;
   font-weight: bold;
 }
