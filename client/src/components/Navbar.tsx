@@ -30,11 +30,13 @@ const Navbar: React.FC = () => {
   const capitalizeName = (name: string) =>
     name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
 
-  const displayRole = (role: string) => (role === "owner" ? "OWNER" : "STUDENT");
+  const displayRole = (role: string) =>
+    role === "owner" ? "OWNER" : "STUDENT";
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node))
+        setOpen(false);
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -50,12 +52,17 @@ const Navbar: React.FC = () => {
       <nav className="navbar-links">
         {user ? (
           <div className="navbar-user" ref={ref}>
-            <button className="navbar-user-btn" onClick={() => setOpen(o => !o)}>
+            <button
+              className="navbar-user-btn"
+              onClick={() => setOpen((o) => !o)}
+            >
               <div className="navbar-icon">{getInitials()}</div>
               <span className="navbar-name">
                 {capitalizeName(user.firstName)} {capitalizeName(user.lastName)}
               </span>
-              <span className={`navbar-role ${user.role === "owner" ? "owner" : ""}`}>
+              <span
+                className={`navbar-role ${user.role === "owner" ? "owner" : ""}`}
+              >
                 {displayRole(user.role)}
               </span>
             </button>

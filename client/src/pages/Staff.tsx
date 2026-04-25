@@ -13,13 +13,22 @@ const Staff: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    authFetch("/api/slots").then(r => r.json()).then(setSlots);
+    authFetch("/api/slots")
+      .then((r) => r.json())
+      .then(setSlots);
   }, []);
 
-  const ownerMap = new Map<string, { ownerName: string; ownerEmail: string; count: number }>();
+  const ownerMap = new Map<
+    string,
+    { ownerName: string; ownerEmail: string; count: number }
+  >();
   for (const slot of slots) {
     if (!ownerMap.has(slot.ownerId)) {
-      ownerMap.set(slot.ownerId, { ownerName: slot.ownerName || slot.ownerEmail, ownerEmail: slot.ownerEmail, count: 0 });
+      ownerMap.set(slot.ownerId, {
+        ownerName: slot.ownerName || slot.ownerEmail,
+        ownerEmail: slot.ownerEmail,
+        count: 0,
+      });
     }
     ownerMap.get(slot.ownerId)!.count++;
   }
@@ -34,20 +43,36 @@ const Staff: React.FC = () => {
             <div className="outer-header">
               <h3>Staff</h3>
             </div>
-            {ownerMap.size === 0 && <p style={{ color: "#b9b9b9" }}>No staff with active slots available.</p>}
+            {ownerMap.size === 0 && (
+              <p style={{ color: "#b9b9b9" }}>
+                No staff with active slots available.
+              </p>
+            )}
             {[...ownerMap.entries()].map(([ownerId, owner]) => {
-              const initials = owner.ownerName.split(" ").map(n => n[0]).join("").slice(0, 2).toUpperCase();
+              const initials = owner.ownerName
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .slice(0, 2)
+                .toUpperCase();
               return (
                 <div key={ownerId} className="inner-row">
                   <div className="row-left">
                     <div className="navbar-icon">{initials}</div>
                     <div className="appointment-info">
                       <div className="title">{owner.ownerName}</div>
-                      <div className="info">{owner.count} active slot{owner.count !== 1 ? "s" : ""}</div>
+                      <div className="info">
+                        {owner.count} active slot{owner.count !== 1 ? "s" : ""}
+                      </div>
                     </div>
                   </div>
                   <div className="grouped-actions">
-                    <button className="button blue" onClick={() => navigate(`/staff/${ownerId}`)}>View</button>
+                    <button
+                      className="button blue"
+                      onClick={() => navigate(`/staff/${ownerId}`)}
+                    >
+                      View
+                    </button>
                   </div>
                 </div>
               );

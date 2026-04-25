@@ -65,7 +65,6 @@ const Login: React.FC = () => {
               Book or host office hours, request meetings, and manage
               appointments. All in one place.
             </p>
-
           </section>
 
           <section className="user-right">

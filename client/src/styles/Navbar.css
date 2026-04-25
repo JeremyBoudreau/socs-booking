@@ -8,7 +8,6 @@
   border-bottom: 1px solid #bfbfbf;
 }
 
-
 .navbar-icon {
   width: 36px;
   height: 36px;
@@ -20,8 +19,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0; 
-  border: 2px solid #a0a0a0; 
+  flex-shrink: 0;
+  border: 2px solid #a0a0a0;
 }
 
 .navbar-role {
@@ -33,8 +32,6 @@
   border-radius: 20px;
   letter-spacing: 0.5px;
 }
-
-
 
 .navbar-left {
   display: flex;
@@ -105,7 +102,7 @@
   background: #ffffff;
   border: 1px solid #e0e0e0;
   border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   min-width: 140px;
   z-index: 100;
   overflow: hidden;
@@ -120,7 +117,7 @@
   border: none;
   cursor: pointer;
   font-size: 15px;
-  color: #d61f2c;
+  color: #ED1B2F;
   font-weight: 600;
   transition: background 0.15s ease;
 }

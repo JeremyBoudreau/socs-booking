@@ -1,43 +1,43 @@
 .sidebar {
-    width: 260px;
-    min-height: 100vh;
-    background: #ffffff;
-    border-right: 1px solid #bfbfbf;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
+  width: 260px;
+  min-height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid #bfbfbf;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
 }
 
 .menu-label {
-    font-size: 16px;
-    color: #b0b0b0;
-    font-weight: 400;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-    text-align: center;
+  font-size: 16px;
+  color: #b0b0b0;
+  font-weight: 400;
+  letter-spacing: 1px;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
 .sidebar-nav {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .sidebar-link {
-    text-decoration: none;
-    color: #9a9a9a;
-    padding: 12px 14px;
-    border-radius: 10px;
-    position: relative;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
+  text-decoration: none;
+  color: #9a9a9a;
+  padding: 12px 14px;
+  border-radius: 10px;
+  position: relative;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .sidebar-link.active {
-    color: #d61f2c;
-    background: rgba(214, 31, 44, 0.08);
-    border-left: 4px solid #d61f2c;
-    padding-left: 10px;
-    /* important so text doesn't shift awkwardly */
+  color: #ED1B2F;
+  background: rgba(214, 31, 44, 0.08);
+  border-left: 4px solid #ED1B2F;
+  padding-left: 10px;
+  /* important so text doesn't shift awkwardly */
 }

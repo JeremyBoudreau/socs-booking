@@ -1,0 +1,85 @@
+.ms-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ms-form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.ms-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ms-field-inline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ms-field-inline span {
+  font-weight: 600;
+}
+
+.ms-field input[type="number"] {
+  width: 70px;
+}
+
+.ms-field input[placeholder="307"] {
+  width: 60px;
+}
+
+.ms-add-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.ms-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ms-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ms-pill-remove {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.ms-status-select {
+  border: none;
+  appearance: none;
+  width: auto;
+  min-width: fit-content;
+  padding: 6px 12px;
+}
+
+.ms-status-select.private {
+  cursor: pointer;
+}
+
+.ms-status-select:not(.private) {
+  cursor: default;
+}
+
+.ms-feedback-error {
+  color: #ED1B2F;
+  margin: 0;
+}
+
+.ms-feedback-success {
+  color: #2e7d32;
+  margin: 0;
+}

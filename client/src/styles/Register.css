@@ -24,7 +24,6 @@ img {
   flex-direction: column;
 }
 
-
 .user-main {
   flex: 1;
   display: grid;
@@ -45,7 +44,7 @@ img {
 }
 
 .red-text {
-  color: #d61f2c;
+  color: #ED1B2F;
 }
 
 .user-subtext {
@@ -108,7 +107,7 @@ img {
 
 .user-label-top {
   margin: 0 0 10px 0;
-  color: #d61f2c;
+  color: #ED1B2F;
   font-size: 0.95rem;
   letter-spacing: 0.02em;
 }
@@ -129,7 +128,7 @@ img {
 }
 
 .user-inline-link {
-  color: #d61f2c;
+  color: #ED1B2F;
   text-decoration: none;
   font-weight: 700;
 }
@@ -237,7 +236,6 @@ img {
   border: 1px solid #000000;
 }
 
-
 @media (max-width: 950px) {
   .user-main {
     grid-template-columns: 1fr;
@@ -249,7 +247,7 @@ img {
 }
 
 @media (max-width: 600px) {
-.user-left,
+  .user-left,
   .user-right {
     padding: 20px 16px;
   }
@@ -273,7 +271,7 @@ img {
 }
 
 .form-error {
-  color: #d61f2c;
+  color: #ED1B2F;
   font-size: 0.85rem;
   margin: 0;
 }

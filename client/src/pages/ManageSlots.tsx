@@ -7,13 +7,16 @@ import { authFetch } from "../utils/fetch";
 import { formatTime } from "../utils/time";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
+import "../styles/ManageSlots.css";
 
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const ManageSlots: React.FC = () => {
   const [slots, setSlots] = useState<Slot[]>([]);
   const [rCourse, setRCourse] = useState("");
-  const [rTimeSlots, setRTimeSlots] = useState<{ day: number; time: string }[]>([]);
+  const [rTimeSlots, setRTimeSlots] = useState<{ day: number; time: string }[]>(
+    [],
+  );
   const [rDay, setRDay] = useState(1);
   const [rAddTime, setRAddTime] = useState("");
   const [rStartDate, setRStartDate] = useState("");
@@ -28,32 +31,47 @@ const ManageSlots: React.FC = () => {
   }, []);
 
   // eslint-disable-next-line react-hooks/set-state-in-effect
-  useEffect(() => { fetchSlots(); }, [fetchSlots]);
+  useEffect(() => {
+    fetchSlots();
+  }, [fetchSlots]);
 
   const handleAddTimeSlot = () => {
     if (!rAddTime) return;
-    setRTimeSlots(prev => [...prev, { day: rDay, time: rAddTime }]);
+    setRTimeSlots((prev) => [...prev, { day: rDay, time: rAddTime }]);
     setRAddTime("");
   };
 
-  const handleCreateRecurring = async (e: React.FormEvent) => {
+  const handleCreateRecurring = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setRError("");
     setRSuccess("");
-    if (rTimeSlots.length === 0) { setRError("Add at least one time slot"); return; }
+    if (rTimeSlots.length === 0) {
+      setRError("Add at least one time slot");
+      return;
+    }
     const res = await authFetch("/api/slots/recurring", {
       method: "POST",
       body: JSON.stringify({
         course: `COMP ${rCourse}`,
-        timeSlots: rTimeSlots.map(s => ({ day: s.day, time: formatTime(s.time) })),
+        timeSlots: rTimeSlots.map((s) => ({
+          day: s.day,
+          time: formatTime(s.time),
+        })),
         startDate: rStartDate,
         weeks: rWeeks,
       }),
     });
     const data = await res.json();
-    if (!res.ok) { setRError(data.error || "Failed to create slots"); return; }
+    if (!res.ok) {
+      setRError(data.error || "Failed to create slots");
+      return;
+    }
     setRSuccess(`${data.count} slots created.`);
-    setRCourse(""); setRTimeSlots([]); setRAddTime(""); setRStartDate(""); setRWeeks(1);
+    setRCourse("");
+    setRTimeSlots([]);
+    setRAddTime("");
+    setRStartDate("");
+    setRWeeks(1);
     fetchSlots();
   };
 
@@ -66,7 +84,9 @@ const ManageSlots: React.FC = () => {
     const res = await authFetch(`/api/slots/${slot._id}`, { method: "DELETE" });
     const data = await res.json();
     if (data.bookedBy) {
-      window.location.assign(`mailto:${data.bookedBy.email}?subject=Slot Cancelled&body=Your booking for ${slot.course} on ${slot.date} at ${slot.time} has been cancelled.`);
+      window.location.assign(
+        `mailto:${data.bookedBy.email}?subject=Slot Cancelled&body=Your booking for ${slot.course} on ${slot.date} at ${slot.time} has been cancelled.`,
+      );
     }
     fetchSlots();
   };
@@ -77,69 +97,92 @@ const ManageSlots: React.FC = () => {
       <div className="dashboard-container">
         <Sidebar />
         <div className="dashboard-content">
-
           <div className="outer-box">
             <div className="outer-header">
               <h3>Create Recurring Slots</h3>
             </div>
-            <form onSubmit={handleCreateRecurring} style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", alignItems: "flex-end" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+            <form className="ms-form" onSubmit={handleCreateRecurring}>
+              <div className="ms-form-row">
+                <div className="ms-field">
                   <label>Course</label>
-                  <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                    <span style={{ fontWeight: 600 }}>COMP</span>
+                  <div className="ms-field-inline">
+                    <span>COMP</span>
                     <input
                       value={rCourse}
-                      onChange={e => setRCourse(e.target.value.replace(/\D/g, "").slice(0, 3))}
+                      onChange={(e) =>
+                        setRCourse(e.target.value.replace(/\D/g, "").slice(0, 3))
+                      }
                       placeholder="307"
                       maxLength={3}
-                      style={{ width: "60px" }}
                       required
                     />
                   </div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <div className="ms-field">
                   <label>Start Date</label>
-                  <input type="date" value={rStartDate} onChange={e => setRStartDate(e.target.value)} required />
+                  <input
+                    type="date"
+                    value={rStartDate}
+                    onChange={(e) => setRStartDate(e.target.value)}
+                    required
+                  />
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <div className="ms-field">
                   <label>Weeks</label>
                   <input
-                    type="number" min={1} max={52} value={rWeeks}
-                    onChange={e => setRWeeks(Number(e.target.value))}
-                    style={{ width: "70px" }} required
+                    type="number"
+                    min={1}
+                    max={52}
+                    value={rWeeks}
+                    onChange={(e) => setRWeeks(Number(e.target.value))}
+                    required
                   />
                 </div>
               </div>
 
-              <div style={{ display: "flex", gap: "8px", alignItems: "flex-end" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+              <div className="ms-add-row">
+                <div className="ms-field">
                   <label>Day</label>
-                  <select value={rDay} onChange={e => setRDay(Number(e.target.value))}>
-                    {DAYS.map((label, i) => <option key={i} value={i}>{label}</option>)}
+                  <select value={rDay} onChange={(e) => setRDay(Number(e.target.value))}>
+                    {DAYS.map((label, i) => (
+                      <option key={i} value={i}>{label}</option>
+                    ))}
                   </select>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                <div className="ms-field">
                   <label>Time</label>
-                  <input type="time" value={rAddTime} onChange={e => setRAddTime(e.target.value)} />
+                  <input
+                    type="time"
+                    value={rAddTime}
+                    onChange={(e) => setRAddTime(e.target.value)}
+                  />
                 </div>
-                <button type="button" className="button" onClick={handleAddTimeSlot}>Add Slot</button>
+                <button type="button" className="button" onClick={handleAddTimeSlot}>
+                  Add Slot
+                </button>
               </div>
 
               {rTimeSlots.length > 0 && (
-                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                <div className="ms-pills">
                   {rTimeSlots.map((s, i) => (
-                    <div key={i} className="button" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <div key={i} className="button ms-pill">
                       {DAYS[s.day]} {formatTime(s.time)}
-                      <span style={{ cursor: "pointer", fontWeight: 700 }} onClick={() => setRTimeSlots(prev => prev.filter((_, j) => j !== i))}>×</span>
+                      <span
+                        className="ms-pill-remove"
+                        onClick={() => setRTimeSlots((prev) => prev.filter((_, j) => j !== i))}
+                      >
+                        ×
+                      </span>
                     </div>
                   ))}
                 </div>
               )}
 
-              {rError && <p style={{ color: "#d61f2c", margin: 0 }}>{rError}</p>}
-              {rSuccess && <p style={{ color: "#2e7d32", margin: 0 }}>{rSuccess}</p>}
-              <div><button type="submit" className="button">Create</button></div>
+              {rError && <p className="ms-feedback-error">{rError}</p>}
+              {rSuccess && <p className="ms-feedback-success">{rSuccess}</p>}
+              <div>
+                <button type="submit" className="button">Create</button>
+              </div>
             </form>
           </div>
 
@@ -148,7 +191,7 @@ const ManageSlots: React.FC = () => {
               <h3>Slots with Me</h3>
             </div>
             {slots.length === 0 && <p style={{ color: "#b9b9b9" }}>No slots yet.</p>}
-            {slots.map(slot => {
+            {slots.map((slot) => {
               const date = new Date(slot.date);
               const month = date.toLocaleString("default", { month: "short" }).toUpperCase();
               const day = date.getDate();
@@ -160,34 +203,48 @@ const ManageSlots: React.FC = () => {
                       <span className="day">{day}</span>
                     </div>
                     <div className="appointment-info" style={{ marginLeft: "12px" }}>
-                      <div className="title">{slot.bookedBy ? `${slot.bookedBy.name} · ${slot.course.toUpperCase()}` : slot.course.toUpperCase()}</div>
+                      <div className="title">
+                        {slot.bookedBy
+                          ? `${slot.bookedBy.name} · ${slot.course.toUpperCase()}`
+                          : slot.course.toUpperCase()}
+                      </div>
                       <div className="info">{slot.time} · {slot.type}</div>
                     </div>
                   </div>
                   <div className="grouped-actions">
                     <select
-                      className={`status ${slot.status}`}
+                      className={`status ms-status-select ${slot.status}`}
                       value={slot.status}
                       disabled={slot.status !== "private"}
                       onChange={() => handleActivate(slot._id)}
-                      style={{ cursor: slot.status === "private" ? "pointer" : "default", border: "none", appearance: "none", width: "auto", minWidth: "fit-content", padding: "6px 12px" }}
                     >
                       <option value="private">Private</option>
                       <option value="active">Active</option>
                       {slot.status === "booked" && <option value="booked">Booked</option>}
                     </select>
                     {slot.bookedBy && (
-                      <a href={`mailto:${slot.bookedBy.email}`} className="button icon-btn blue" style={{ textDecoration: "none" }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg></a>
+                      <a href={`mailto:${slot.bookedBy.email}`} className="button icon-btn blue" style={{ textDecoration: "none" }}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                          <rect x="2" y="4" width="20" height="16" rx="2" />
+                          <polyline points="2,4 12,13 22,4" />
+                        </svg>
+                      </a>
                     )}
-                    <button className="button icon-btn red" onClick={() => handleDelete(slot)}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M10 11v6" /><path d="M14 11v6" /><path d="M9 6V4h6v2" /></svg></button>
+                    <button className="button icon-btn red" onClick={() => handleDelete(slot)}>
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <polyline points="3 6 5 6 21 6" />
+                        <path d="M19 6l-1 14H6L5 6" />
+                        <path d="M10 11v6" />
+                        <path d="M14 11v6" />
+                        <path d="M9 6V4h6v2" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               );
             })}
           </div>
-
-
-</div>
+        </div>
       </div>
       <Footer />
     </div>

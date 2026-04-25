@@ -11,10 +11,14 @@ export default function MySessions({ slots }: Props) {
         <a href="/appointments">Manage all</a>
       </div>
 
-      {slots.length === 0 && <p style={{ color: "#b9b9b9" }}>No booked appointments.</p>}
+      {slots.length === 0 && (
+        <p style={{ color: "#b9b9b9" }}>No booked appointments.</p>
+      )}
       {slots.map((slot) => {
         const date = new Date(slot.date);
-        const month = date.toLocaleString("default", { month: "short" }).toUpperCase();
+        const month = date
+          .toLocaleString("default", { month: "short" })
+          .toUpperCase();
         const day = date.getDate();
 
         return (
@@ -25,7 +29,9 @@ export default function MySessions({ slots }: Props) {
                 <span className="day">{day}</span>
               </div>
               <div className="appointment-info" style={{ marginLeft: "12px" }}>
-                <div className="title">{slot.ownerName} · {slot.course.toUpperCase()}</div>
+                <div className="title">
+                  {slot.ownerName} · {slot.course.toUpperCase()}
+                </div>
                 <div className="info">{slot.time}</div>
               </div>
             </div>

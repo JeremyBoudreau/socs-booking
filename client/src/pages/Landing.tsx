@@ -52,9 +52,6 @@ const Landing: React.FC = () => {
                 <Link to={isLoggedIn ? "/dashboard" : "/register"}>
                   <button>Get Started</button>
                 </Link>
-                <Link to={isLoggedIn ? "/dashboard" : "/login"}>
-                  <button>Browse Slots</button>
-                </Link>
               </div>
             </div>
 

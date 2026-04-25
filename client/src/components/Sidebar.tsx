@@ -6,7 +6,7 @@ const getLinkClass = ({ isActive }: { isActive: boolean }) =>
 
 export default function Sidebar() {
   const storedUser = localStorage.getItem("user");
-  const user = storedUser ? JSON.parse(storedUser) as { role: string } : null;
+  const user = storedUser ? (JSON.parse(storedUser) as { role: string }) : null;
   const isOwner = user?.role === "owner";
 
   return (

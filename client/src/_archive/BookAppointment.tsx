@@ -12,7 +12,11 @@ export default function BookAppointment() {
       <p style={{ color: "#9a9a9a", marginBottom: "16px" }}>
         Browse available staff and reserve a time slot.
       </p>
-      <button className="button blue" style={{ width: "100%", height: "48px", fontSize: "16px" }} onClick={() => navigate("/staff")}>
+      <button
+        className="button blue"
+        style={{ width: "100%", height: "48px", fontSize: "16px" }}
+        onClick={() => navigate("/staff")}
+      >
         Book
       </button>
     </div>
