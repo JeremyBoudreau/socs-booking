@@ -72,6 +72,7 @@ export default function CreatePoll() {
       }
 
       alert("Poll created!");
+      window.dispatchEvent(new Event("poll-updated"));
 
       setCourse("");
       setSlots([{ date: "", startTime: "", endTime: "" }]);

@@ -4,6 +4,7 @@ import authRoutes from './routes/auth.js';
 import slotsRoutes from './routes/slots.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import pollsRouter from "./routes/polls.js";
 
 const app = express();
 const PORT = 3000;
@@ -19,12 +20,18 @@ app.use("/api/auth", authRoutes);
 // slot management routes (create, activate, delete, book, cancel)
 app.use("/api/slots", slotsRoutes);
 
+app.use("/api/polls", pollsRouter);
+
 // catch-all (serve React's index.html for any non-API route)
 app.get('/{*path}', (_req: Request, res: Response): void => {
     res.sendFile(path.join(__dirname, '../../client/dist/index.html'));
 });
 
+
+
+
 // start server on port `PORT`
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+

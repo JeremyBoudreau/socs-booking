@@ -12,14 +12,19 @@ export default function MySlots(props: Props) {
       </div>
 
       {props.slots.map((slot) => {
-        const date = new Date(slot.date);
-        const day = date.toLocaleString("default", { weekday: "short" });
+        const startDate = new Date(slot.start);
+        const endDate = new Date(slot.end);
+
+        const day = startDate.toLocaleString("default", { weekday: "short" });
+
+        const startTime = startDate.toTimeString().slice(0, 5);
+        const endTime = endDate.toTimeString().slice(0, 5);
 
         return (
           <div key={slot._id} className="inner-row">
             <div className="appointment-info">
               <div className="title">
-                {slot.type} | {day} {slot.time}
+                {slot.type} | {day} {startTime} - {endTime}
               </div>
 
               <div className="info">{slot.course}</div>

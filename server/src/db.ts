@@ -8,4 +8,6 @@ const client = new MongoClient(mongoUrl);
 await client.connect();
 
 const db = client.db('booking');
+
+
 export default db;

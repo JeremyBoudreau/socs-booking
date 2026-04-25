@@ -41,3 +41,11 @@
     padding-left: 10px;
     /* important so text doesn't shift awkwardly */
 }
+
+.sidebar-link:hover {
+    color: #d61f2c;
+    background: rgba(214, 31, 44, 0.08);
+    border-left: 4px solid #d61f2c;
+    padding-left: 10px;
+    /* important so text doesn't shift awkwardly */
+}

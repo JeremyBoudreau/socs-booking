@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/RowBox.css";
+import { authFetch } from "../utils/fetch";
 
 type PollSlotView = {
   id: string;
@@ -14,12 +15,25 @@ type PollView = {
   slots: PollSlotView[];
 };
 
-type Props = {
-  polls: PollView[];
-};
-
-export default function PollManager({ polls }: Props) {
+export default function PollManager() {
+  const [polls, setPolls] = useState<PollView[]>([]);
   const [selected, setSelected] = useState<Record<string, string>>({});
+  useEffect(() => {
+    const fetchPolls = async () => {
+      const res = await authFetch("http://localhost:3000/api/polls");
+      const data = await res.json();
+      setPolls(data);
+    };
+
+    fetchPolls();
+
+    window.addEventListener("poll-updated", fetchPolls);
+
+    return () => window.removeEventListener("poll-updated", fetchPolls);
+  }, []);
+
+  const [recurring, setRecurring] = useState<Record<string, boolean>>({});
+  const [weeks, setWeeks] = useState<Record<string, number>>({});
 
   const handleConfirm = async (pollId: string) => {
     const slotId = selected[pollId];
@@ -29,11 +43,22 @@ export default function PollManager({ polls }: Props) {
       return;
     }
 
-    await fetch(`/api/polls/${pollId}/finalize`, {
+    if (recurring[pollId] && !weeks[pollId]) {
+      alert("Please enter number of weeks");
+      return;
+    }
+
+    await authFetch(`http://localhost:3000/api/polls/${pollId}/finalize`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ slotId }),
+      body: JSON.stringify({
+        slotId,
+        recurring: recurring[pollId] || false,
+        weeks: recurring[pollId] ? weeks[pollId] || 1 : 0,
+      }),
     });
+
+    setPolls((prev) => prev.filter((p) => p._id !== pollId));
 
     alert("Poll finalized!");
   };
@@ -81,6 +106,37 @@ export default function PollManager({ polls }: Props) {
                   </option>
                 ))}
               </select>
+              <div className="recurring-row">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={recurring[poll._id] || false}
+                    onChange={(e) =>
+                      setRecurring({
+                        ...recurring,
+                        [poll._id]: e.target.checked,
+                      })
+                    }
+                  />{" "}
+                  Recurring?
+                </label>
+
+                {recurring[poll._id] && (
+                  <input
+                    type="number"
+                    min={1}
+                    placeholder="Weeks After"
+                    value={weeks[poll._id] || ""}
+                    onChange={(e) =>
+                      setWeeks({
+                        ...weeks,
+                        [poll._id]: Number(e.target.value),
+                      })
+                    }
+                    className="recurring-input"
+                  />
+                )}
+              </div>
             </div>
           </div>
 
