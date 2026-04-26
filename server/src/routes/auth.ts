@@ -103,7 +103,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
         throw new Error("JWT_SECRET is not set");
     }
     const token = jwt.sign(
-        { userId: user._id.toString(), email: user.email, role: user.role }, // the payload, used to know who's logged in when reading from the frontend
+        { id: user._id.toString(), email: user.email, role: user.role }, // the payload, used to know who's logged in when reading from the frontend
         secret, // used to sign the token so the server can verify it wasn't tampered with
         { expiresIn: LOGIN_INTERVAL } // forces the user to log in again
     );
@@ -116,7 +116,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
         // and know the user's role for authorization purposes
         // without needing to decode the JWT token on the client side
         user: {
-            userId: user._id.toString(),
+            id: user._id.toString(),
             firstName: user.firstName,
             lastName: user.lastName,
             role: user.role,
