@@ -12,13 +12,14 @@ export default function Sidebar() {
   return (
     <div className="sidebar">
       <nav className="sidebar-nav">
+        <div className="menu-title">MENU</div>
         <NavLink to="/dashboard" className={getLinkClass}>
           Dashboard
         </NavLink>
 
         {isOwner && (
           <NavLink to="/slots" className={getLinkClass}>
-            Slots with Me
+            My Slots
           </NavLink>
         )}
         <NavLink to="/appointments" className={getLinkClass}>

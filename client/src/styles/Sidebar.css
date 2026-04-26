@@ -6,8 +6,17 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
+  justify-content: flex-start;
 }
 
+.menu-title { 
+   padding: 16px 20px;
+  font-weight: 300;
+  color: #a0a0a0;
+  border-bottom: 1px solid #eee;
+  justify-content: center;
+  text-align: center;
+}
 .menu-label {
   font-size: 16px;
   color: #b0b0b0;

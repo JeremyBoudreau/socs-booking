@@ -8,6 +8,13 @@ type Props = {
   readonly?: boolean;
 };
 
+const capitalize = (name: string) => {
+  return name
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
 export default function AppointmentRow({
   slot,
   currentUserId,
@@ -21,7 +28,7 @@ export default function AppointmentRow({
   const day = date.getDate();
 
   const isHost = slot.ownerId === currentUserId;
-  const personName = isHost ? (slot.bookedBy?.name ?? "") : slot.ownerName;
+  const personName = isHost ? (slot.bookedBy?.name ?? "") : capitalize(slot.ownerName);
 
   return (
     <div className="inner-row">
@@ -35,7 +42,7 @@ export default function AppointmentRow({
             {personName} · {slot.course.toUpperCase()}
           </div>
           <div className="info">
-            {slot.time} · {slot.type}
+            {slot.time} · {capitalize(slot.type)}
           </div>
         </div>
       </div>

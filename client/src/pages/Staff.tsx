@@ -8,6 +8,13 @@ import type { Slot } from "../types";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
+const capitalize = (name: string) => {
+  return name
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
 const Staff: React.FC = () => {
   const [slots, setSlots] = useState<Slot[]>([]);
   const navigate = useNavigate();
@@ -60,7 +67,7 @@ const Staff: React.FC = () => {
                   <div className="row-left">
                     <div className="navbar-icon">{initials}</div>
                     <div className="appointment-info">
-                      <div className="title">{owner.ownerName}</div>
+                      <div className="title">{capitalize(owner.ownerName)}</div>
                       <div className="info">
                         {owner.count} active slot{owner.count !== 1 ? "s" : ""}
                       </div>

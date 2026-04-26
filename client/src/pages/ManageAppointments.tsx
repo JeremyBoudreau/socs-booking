@@ -8,6 +8,13 @@ import { authFetch } from "../utils/fetch";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
+const capitalize = (name: string) => {
+  return name
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+};
+
 const ManageAppointments: React.FC = () => {
   const [bookedSlots, setBookedSlots] = useState<Slot[]>([]);
   const [requests, setRequests] = useState<RequestSlot[]>([]);
@@ -82,7 +89,7 @@ const ManageAppointments: React.FC = () => {
                       style={{ marginLeft: "12px" }}
                     >
                       <div className="title">
-                        {slot.ownerName} · {slot.course.toUpperCase()}
+                        {capitalize(slot.ownerName)} · {slot.course.toUpperCase()}
                       </div>
                       <div className="info">
                         {slot.time} · {slot.type}

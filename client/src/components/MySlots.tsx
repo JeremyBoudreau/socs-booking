@@ -8,7 +8,7 @@ export default function MySlots(props: Props) {
   return (
     <div className="outer-box">
       <div className="outer-header">
-        <h3>Slots with Me</h3>
+        <h3>My Slots</h3>
         <a href="/slots">Manage all</a>
       </div>
       {props.slots.length === 0 && (
