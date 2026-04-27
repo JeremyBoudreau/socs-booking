@@ -68,7 +68,6 @@ const Register: React.FC = () => {
 
             <div className="account-type-list">
               <div className="account-type-item">
-                <span className="account-icon">🎓</span>
                 <div>
                   <strong>Student</strong>
                   <p>Browse slots and book appointments</p>
@@ -76,7 +75,6 @@ const Register: React.FC = () => {
               </div>
 
               <div className="account-type-item">
-                <span className="account-icon">🧑‍🏫</span>
                 <div>
                   <strong>Professor / TA</strong>
                   <p>Create and manage office hours</p>
