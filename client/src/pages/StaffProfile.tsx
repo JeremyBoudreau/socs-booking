@@ -153,7 +153,7 @@ const StaffProfile: React.FC = () => {
                       <div className="title">
                         {slot.course.toUpperCase()} · {slot.type}
                       </div>
-                      <div className="info">{displayTime(slot.start)} – {displayTime(slot.end)}</div>
+                      <div className="info">{displayTime(slot.start)} to {displayTime(slot.end)}</div>
                     </div>
                   </div>
                   <div className="grouped-actions">

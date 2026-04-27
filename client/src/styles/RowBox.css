@@ -87,6 +87,7 @@
 
 .appointment-info {
   flex: 1;
+  min-width: 0;
   margin-left: 16px;
 }
 
@@ -167,6 +168,7 @@
 
 .grouped-actions {
   display: flex;
+  align-items: center;
   gap: 8px;
   padding-left: 16px;
 }
@@ -185,9 +187,11 @@
 .status {
   font-size: 12px;
   font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 20px;
+  padding: 2px 8px;
+  border-radius: 4px;
   text-transform: capitalize;
+  width: fit-content;
+  white-space: nowrap;
 }
 
 .status.active {
