@@ -3,31 +3,30 @@ import db from "../db.js";
 import { ObjectId } from "mongodb";
 import { authenticateToken } from "../middleware/auth.js";
 
-
-
 const router = Router();
 router.use(authenticateToken);
-
-
 
 router.post("/", async (req, res) => {
   try {
     const { course, slots } = req.body;
-    const user = (req as any).user; //(req as any) removes warning, not technically needed
+    const user = (req as any).user;
 
     if (!user) {
-  return res.status(401).json({ error: "Unauthorized" });
-}
-const userId = user.id;
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const userId = user.id;
 
     const poll = await db.collection("polls").insertOne({
-        course,
-        ownerId: userId,
-        status: "open",
+      course,
+      ownerId: userId,
+      status: "open",
     });
 
+    const pollId = poll.insertedId.toString();
+
     const pollSlots = slots.map((s: any) => ({
-      pollId: poll.insertedId,
+      pollId,
       start: s.start,
       end: s.end,
     }));
@@ -36,6 +35,7 @@ const userId = user.id;
 
     res.json({ success: true });
   } catch (err) {
+    console.log(err);
     res.status(500).json({ error: "Failed to create poll" });
   }
 });
@@ -47,29 +47,30 @@ router.get("/", async (req, res) => {
     const query: any = { status: "open" };
 
     if (ownerId) {
-      query.ownerId = ownerId; 
+      query.ownerId = ownerId.toString();
     }
 
-    const polls = await db
-      .collection("polls")
-      .find(query)
-      .toArray();
+    const polls = await db.collection("polls").find(query).toArray();
 
     const result = await Promise.all(
       polls.map(async (poll) => {
+        const pollId = poll._id.toString();
+
         const slots = await db
           .collection("pollSlots")
-          .find({ pollId: poll._id })
+          .find({ pollId })
           .toArray();
 
         const formattedSlots = await Promise.all(
           slots.map(async (slot) => {
+            const slotId = slot._id.toString();
+
             const voteCount = await db
               .collection("pollVotes")
-              .countDocuments({ pollSlotId: slot._id });
+              .countDocuments({ pollSlotId: slotId });
 
             return {
-              id: slot._id,
+              id: slotId,
               start: slot.start,
               end: slot.end,
               voteCount,
@@ -78,7 +79,7 @@ router.get("/", async (req, res) => {
         );
 
         return {
-          _id: poll._id,
+          _id: pollId,
           course: poll.course,
           slots: formattedSlots,
         };
@@ -107,77 +108,77 @@ router.post("/:pollId/finalize", async (req, res) => {
 
     const votes = await db
       .collection("pollVotes")
-      .find({ pollSlotId: slot._id })
+      .find({ pollSlotId: slot._id.toString() })
       .toArray();
 
     if (votes.length === 0) {
       return res.status(400).json({ error: "No votes for this slot" });
     }
 
-    const userIds = votes.map((v) => new ObjectId(v.userId));
+    const userIds = votes.map((v) => v.userId).filter(Boolean);
 
     const users = await db
       .collection("users")
-      .find({ _id: { $in: userIds } })
+      .find({ id: { $in: userIds } })
       .toArray();
 
-    const userMap = new Map(users.map((u) => [u._id.toString(), u]));
+    const userMap = new Map(users.map((u) => [u.id, u]));
 
-
-    //inserts[] is the slots we'll be adding at the end of this API call
-    const inserts = [];
+    const inserts: any[] = [];
     const repeatCount = recurring ? weeks : 1;
 
     const baseStart = new Date(slot.start);
-const baseEnd = new Date(slot.end);
+    const baseEnd = new Date(slot.end);
 
     for (let i = 0; i < repeatCount; i++) {
-  const newStart = new Date(baseStart);
-  const newEnd = new Date(baseEnd);
+      const newStart = new Date(baseStart);
+      const newEnd = new Date(baseEnd);
 
-  newStart.setDate(newStart.getDate() + i * 7);
-  newEnd.setDate(newEnd.getDate() + i * 7);
+      newStart.setDate(newStart.getDate() + i * 7);
+      newEnd.setDate(newEnd.getDate() + i * 7);
 
-  for (const vote of votes) {
-    const user = userMap.get(vote.userId.toString());
-    if (!user) continue;
+      for (const vote of votes) {
+        const user = userMap.get(vote.userId);
+        if (!user) continue;
 
-    inserts.push({
-      ownerId: slot.ownerId,
-      ownerName: slot.ownerName,
-      ownerEmail: slot.ownerEmail,
+        inserts.push({
+          ownerId: slot.ownerId,
+          ownerName: slot.ownerName,
+          ownerEmail: slot.ownerEmail,
 
-      course: slot.course,
-      type: slot.type,
+          course: slot.course,
+          type: slot.type,
 
-      start: newStart.toISOString(),
-      end: newEnd.toISOString(),
+          start: newStart.toISOString(),
+          end: newEnd.toISOString(),
 
-      status: "booked",
+          status: "booked",
 
-      bookedBy: {
-        userId: user._id.toString(),
-        name: user.name,
-        email: user.email,
-      },
+          bookedBy: {
+            userId: user.id,
+            name: `${user.firstName} ${user.lastName}`,
+            email: user.email,
+          },
 
-      createdAt: new Date(),
-    });
-  }
-}
+          createdAt: new Date(),
+        });
+      }
+    }
 
-    await db.collection("slots").insertMany(inserts);
+    if (inserts.length > 0) {
+      await db.collection("slots").insertMany(inserts);
+    }
 
     await db.collection("polls").deleteOne({
       _id: new ObjectId(pollId),
     });
 
     await db.collection("pollSlots").deleteMany({
-      pollId: new ObjectId(pollId),
+      pollId,
     });
 
     await db.collection("pollVotes").deleteMany({
-      pollSlotId: new ObjectId(slotId),
+      pollId,
     });
 
     res.json({ success: true });
@@ -193,50 +194,34 @@ router.post("/:pollId/vote", async (req, res) => {
     const { slotIds } = req.body;
 
     const user = (req as any).user;
+
     if (!user) {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const userId = user.userId;
+    const userId = user.id;
 
     if (!Array.isArray(slotIds) || slotIds.length === 0) {
       return res.status(400).json({ error: "No slots selected" });
     }
 
     const votesCollection = db.collection("pollVotes");
-    
-const objectSlotIds = slotIds.map((id: string) => new ObjectId(id));
 
-const pollAlreadyVoted = await votesCollection.findOne({
-  pollId: new ObjectId(pollId),
-  userId,
-});
+    const pollAlreadyVoted = await votesCollection.findOne({
+      pollId,
+      userId,
+    });
 
-if (pollAlreadyVoted) {
-  return res.status(400).json({ error: "You already voted on this poll" });
-}
-
-const existingVotes = await votesCollection
-  .find({
-    userId,
-    pollSlotId: { $in: objectSlotIds },
-  })
-  .toArray();
-
-    const alreadyVoted = new Set(
-      existingVotes.map((v) => v.pollSlotId.toString())
-    );
-
-const newVotes = objectSlotIds.map((slotId) => ({
-  pollSlotId: slotId,
-  userId,
-  pollId: new ObjectId(pollId),
-  createdAt: new Date(),
-}));
-
-    if (newVotes.length === 0) {
-      return res.status(200).json({ message: "Already voted" });
+    if (pollAlreadyVoted) {
+      return res.status(400).json({ error: "You already voted on this poll" });
     }
+
+    const newVotes = slotIds.map((slotId: string) => ({
+      pollSlotId: slotId,
+      userId,
+      pollId,
+      createdAt: new Date(),
+    }));
 
     await votesCollection.insertMany(newVotes);
 

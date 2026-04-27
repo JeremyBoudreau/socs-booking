@@ -24,12 +24,16 @@ router.get("/overview", async (req, res) => {
     const pollCountMap = new Map<string, number>();
 
     for (const slot of slots) {
-      const id = slot.ownerId.toString();
+      const id = slot.ownerId?.toString();
+      if (!id) continue;
+
       slotCountMap.set(id, (slotCountMap.get(id) || 0) + 1);
     }
 
     for (const poll of polls) {
-      const id = poll.ownerId.toString();
+      const id = poll.ownerId?.toString();
+      if (!id) continue;
+
       pollCountMap.set(id, (pollCountMap.get(id) || 0) + 1);
     }
 
@@ -37,7 +41,7 @@ router.get("/overview", async (req, res) => {
       const id = s._id.toString();
 
       const fullName =
-    `${s.firstName ?? ""} ${s.lastName ?? ""}`.trim() || "Unknown";
+        `${s.firstName ?? ""} ${s.lastName ?? ""}`.trim() || "Unknown";
 
       return {
         ownerId: id,
