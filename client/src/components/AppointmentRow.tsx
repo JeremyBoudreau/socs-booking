@@ -29,7 +29,7 @@ export default function AppointmentRow({ slot, currentUserId, onCancel, readonly
             {personName} · {slot.course.toUpperCase()}
           </div>
           <div className="info">
-            {displayTime(slot.start)} – {displayTime(slot.end)} · {capitalize(slot.type)}
+            {displayTime(slot.start)} to {displayTime(slot.end)} · {capitalize(slot.type)}
           </div>
         </div>
       </div>
