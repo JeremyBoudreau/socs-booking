@@ -43,8 +43,8 @@ router.post(
       ownerEmail: owner["email"],
 
       course: req.body.course,
-      date: req.body.date,
-      time: req.body.time,
+      start: new Date(req.body.start).toISOString(),
+      end: new Date(req.body.end).toISOString(),
 
       type: "request",
       status: "pending",

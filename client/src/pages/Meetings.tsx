@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import type { RequestSlot } from "../types";
 import { authFetch } from "../utils/fetch";
+import { displayTime, isoToMonthDay } from "../utils/time";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
@@ -75,7 +76,7 @@ const Meetings: React.FC = () => {
                         {req.course.toUpperCase()} · {req.createdBy.name}
                       </div>
                       <div className="info">
-                        {req.date} at {req.time}
+                        {(() => { const { month, day } = isoToMonthDay(req.start); return `${month} ${day}`; })()} at {displayTime(req.start)}
                       </div>
                       {req.message && <div className="info">{req.message}</div>}
                     </div>

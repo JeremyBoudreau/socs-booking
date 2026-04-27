@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import type { Slot } from "../types";
 import { authFetch } from "../utils/fetch";
-import { formatTime } from "../utils/time";
+import { displayTime, isoToMonthDay } from "../utils/time";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 import "../styles/ManageSlots.css";
@@ -51,14 +51,14 @@ const ManageSlots: React.FC = () => {
       setRError("Add at least one time slot");
       return;
     }
-    const res = await authFetch("/api/oh/recurring", {
+    const res = await authFetch("/api/oh", {
       method: "POST",
       body: JSON.stringify({
         course: `COMP ${rCourse}`,
         timeSlots: rTimeSlots.map((s) => ({
           day: s.day,
-          time: formatTime(s.time),
-          endTime: formatTime(s.endTime),
+          time: s.time,
+          endTime: s.endTime,
         })),
         startDate: rStartDate,
         weeks: rWeeks,
@@ -89,7 +89,7 @@ const ManageSlots: React.FC = () => {
     const data = await res.json();
     if (data.bookedBy) {
       window.location.assign(
-        `mailto:${data.bookedBy.email}?subject=Slot Cancelled&body=Your booking for ${slot.course} on ${slot.date} at ${slot.time} has been cancelled.`,
+        `mailto:${data.bookedBy.email}?subject=Slot Cancelled&body=Your booking for ${slot.course} on ${slot.start.split("T")[0]} at ${displayTime(slot.start)} has been cancelled.`,
       );
     }
     fetchSlots();
@@ -178,7 +178,7 @@ const ManageSlots: React.FC = () => {
                 <div className="ms-pills">
                   {rTimeSlots.map((s, i) => (
                     <div key={i} className="button ms-pill">
-                      {DAYS[s.day]} {formatTime(s.time)} – {formatTime(s.endTime)}
+                      {DAYS[s.day]} {displayTime(s.time)} – {displayTime(s.endTime)}
                       <span
                         className="ms-pill-remove"
                         onClick={() => setRTimeSlots((prev) => prev.filter((_, j) => j !== i))}
@@ -204,9 +204,7 @@ const ManageSlots: React.FC = () => {
             </div>
             {slots.length === 0 && <p style={{ color: "#b9b9b9" }}>No slots yet.</p>}
             {slots.map((slot) => {
-              const date = new Date(slot.date);
-              const month = date.toLocaleString("default", { month: "short" }).toUpperCase();
-              const day = date.getDate();
+              const { month, day } = isoToMonthDay(slot.start);
               return (
                 <div key={slot._id} className="slot-row">
                   <div className="row-left">
@@ -220,7 +218,7 @@ const ManageSlots: React.FC = () => {
                           ? `${slot.bookedBy.name} · ${slot.course.toUpperCase()}`
                           : slot.course.toUpperCase()}
                       </div>
-                      <div className="info">{slot.time}{slot.endTime ? ` – ${slot.endTime}` : ""} · {slot.type}</div>
+                      <div className="info">{displayTime(slot.start)} – {displayTime(slot.end)} · {slot.type}</div>
                     </div>
                   </div>
                   <div className="grouped-actions">

@@ -1,5 +1,6 @@
 import "../styles/RowBox.css";
 import type { Slot } from "../types";
+import { displayTime, isoToMonthDay } from "../utils/time";
 
 type Props = { slots: Slot[] };
 
@@ -15,12 +16,7 @@ export default function MySessions({ slots }: Props) {
         <p style={{ color: "#b9b9b9" }}>No booked appointments.</p>
       )}
       {slots.map((slot) => {
-        const date = new Date(slot.date);
-        const month = date
-          .toLocaleString("default", { month: "short" })
-          .toUpperCase();
-        const day = date.getDate();
-
+        const { month, day } = isoToMonthDay(slot.start);
         return (
           <div key={slot._id} className="slot-row">
             <div className="row-left">
@@ -32,7 +28,7 @@ export default function MySessions({ slots }: Props) {
                 <div className="title">
                   {slot.ownerName} · {slot.course.toUpperCase()}
                 </div>
-                <div className="info">{slot.time}</div>
+                <div className="info">{displayTime(slot.start)} – {displayTime(slot.end)}</div>
               </div>
             </div>
           </div>

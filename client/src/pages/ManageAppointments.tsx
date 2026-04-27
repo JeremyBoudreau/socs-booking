@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import type { Slot, RequestSlot } from "../types";
 import { authFetch } from "../utils/fetch";
+import { displayTime } from "../utils/time";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
@@ -63,7 +64,7 @@ const ManageAppointments: React.FC = () => {
     const data = await res.json();
     if (data.ownerEmail) {
       window.location.assign(
-        `mailto:${data.ownerEmail}?subject=Meeting Cancelled&body=Hi, I have cancelled my meeting request for ${req.course} on ${req.date} at ${req.time}.`,
+        `mailto:${data.ownerEmail}?subject=Meeting Cancelled&body=Hi, I have cancelled my meeting request for ${req.course} on ${req.start.split("T")[0]} at ${displayTime(req.start)}.`,
       );
     }
     fetchAll();
@@ -74,7 +75,7 @@ const ManageAppointments: React.FC = () => {
     const data = await res.json();
     if (data.ownerEmail) {
       window.location.assign(
-        `mailto:${data.ownerEmail}?subject=Booking Cancelled&body=Hi, I have cancelled my booking for ${slot.course} on ${slot.date} at ${slot.time}.`,
+        `mailto:${data.ownerEmail}?subject=Booking Cancelled&body=Hi, I have cancelled my booking for ${slot.course} on ${slot.start.split("T")[0]} at ${displayTime(slot.start)}.`,
       );
     }
     fetchAll();
@@ -113,12 +114,12 @@ const ManageAppointments: React.FC = () => {
             {bookedSlots.map((slot) => (
               <div key={slot._id} className="slot-row">
                 <div className="row-left">
-                  <DateBadge dateStr={slot.date} />
+                  <DateBadge dateStr={slot.start} />
                   <div className="appointment-info" style={{ marginLeft: "12px" }}>
                     <div className="title">
                       {capitalize(slot.ownerName)} · {slot.course.toUpperCase()}
                     </div>
-                    <div className="info">{slot.time} · {slot.type}</div>
+                    <div className="info">{displayTime(slot.start)} – {displayTime(slot.end)} · {slot.type}</div>
                   </div>
                 </div>
                 <div className="grouped-actions">
@@ -134,12 +135,12 @@ const ManageAppointments: React.FC = () => {
             {confirmed.map((req) => (
               <div key={req._id} className="slot-row">
                 <div className="row-left">
-                  <DateBadge dateStr={req.date} />
+                  <DateBadge dateStr={req.start} />
                   <div className="appointment-info" style={{ marginLeft: "12px" }}>
                     <div className="title">
                       {capitalize(req.ownerName)} · {req.course.toUpperCase()}
                     </div>
-                    <div className="info">{req.time} · 1-on-1 Meeting</div>
+                    <div className="info">{displayTime(req.start)} – {displayTime(req.end)} · 1-on-1 Meeting</div>
                   </div>
                 </div>
                 <div className="grouped-actions">
