@@ -5,47 +5,9 @@ import { authenticateToken, requireOwner, type AuthRequest } from "../middleware
 
 const router = Router();
 
-// owner creates a new private slot
-// POST /api/slots
+// owner creates recurring office hour slots
+// POST /api/oh
 router.post("/", authenticateToken, requireOwner, async (req: AuthRequest, res: Response): Promise<void> => {
-    // validate request body
-    // course of the form "COMP307"
-    // date of the form "2024-12-31"
-    // time of the form "14:00"
-    // type of the form "office hours" or "1-on-1"
-    const { course, date, time, type } = req.body;
-
-    // check for missing fields
-    if (!course || !date || !time || !type) {
-        res.status(400).json({ error: "course, date, time, and type are required" });
-        return;
-    }
-
-    // insert new slot into database with status "private"
-    const users = db.collection("users");
-    const owner = await users.findOne({ _id: new ObjectId(req.user!.id) });
-    const ownerName = owner ? `${owner["firstName"]} ${owner["lastName"]}` : req.user!.email;
-
-    const slots = db.collection("slots");
-    const result = await slots.insertOne({
-        ownerId: new ObjectId(req.user!.id),
-        ownerEmail: req.user!.email,
-        ownerName,
-        course,
-        date,
-        time,
-        type,
-        status: "private",
-        bookedBy: null,
-        createdAt: new Date(),
-    });
-
-    res.status(201).json({ slotId: result.insertedId }); // `result.insertedId` is the ID of the newly inserted slot document
-});
-
-// owner creates recurring office hour slots (Type 3)
-// POST /api/slots/recurring
-router.post("/recurring", authenticateToken, requireOwner, async (req: AuthRequest, res: Response): Promise<void> => {
     const { course, timeSlots, startDate, weeks } = req.body;
 
     if (!course || !timeSlots || !startDate || !weeks) {
@@ -72,15 +34,15 @@ router.post("/recurring", authenticateToken, requireOwner, async (req: AuthReque
         const dayOfWeek = date.getUTCDay();
         const dateStr = date.toISOString().split("T")[0];
 
-        for (const { day, time } of timeSlots as { day: number; time: string }[]) {
+        for (const { day, time, endTime } of timeSlots as { day: number; time: string; endTime: string }[]) {
             if (day === dayOfWeek) {
                 toInsert.push({
                     ownerId: new ObjectId(req.user!.id),
                     ownerEmail: req.user!.email,
                     ownerName,
                     course,
-                    date: dateStr,
-                    time,
+                    start: new Date(`${dateStr}T${time}:00`).toISOString(),
+                    end: new Date(`${dateStr}T${endTime}:00`).toISOString(),
                     type: "Office Hours",
                     status: "private",
                     bookedBy: null,

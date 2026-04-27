@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { RequestSlot } from "../types";
 import { authFetch } from "../utils/fetch";
+import { displayTime, isoToMonthDay } from "../utils/time";
 import "../styles/RowBox.css";
 
 type Input = {
@@ -59,7 +60,7 @@ const MeetingRequests = ({ onChange }: Input) => {
                 {request.course.toUpperCase()} · {request.createdBy.name}
               </div>
               <div className="info">
-                {request.date} at {request.time}
+                {(() => { const { month, day } = isoToMonthDay(request.start); return `${month} ${day}`; })()} at {displayTime(request.start)}
               </div>
               <div className="info">{request.message}</div>
             </div>

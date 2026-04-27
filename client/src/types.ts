@@ -4,9 +4,8 @@ interface BaseSlot {
   ownerName: string;
   ownerEmail: string;
   course: string;
-  date: string;
-  time: string;
-  endTime?: string;
+  start: string;
+  end: string;
   type: string;
   createdAt: string;
 }
