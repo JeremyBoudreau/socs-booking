@@ -40,8 +40,8 @@ const Landing: React.FC = () => {
             <div className="home-image">
               <img src="/mcgill-building.jpg" alt="McGill campus building" />
             </div>
+          </section>
         </main>
-
         <Footer />
       </div>
     </div>
