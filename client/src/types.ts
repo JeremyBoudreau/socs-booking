@@ -17,6 +17,6 @@ export type Slot = BaseSlot & {
 
 export type RequestSlot = BaseSlot & {
   status: "pending" | "denied" | "confirmed";
-  createdBy: { userId: string; name: string; email: string };
+  bookedBy: { userId: string; name: string; email: string };
   message: string;
 };

@@ -37,7 +37,7 @@ router.post("/", authenticateToken, requireOwner, async (req: AuthRequest, res: 
         for (const { day, time, endTime } of timeSlots as { day: number; time: string; endTime: string }[]) {
             if (day === dayOfWeek) {
                 toInsert.push({
-                    ownerId: new ObjectId(req.user!.id),
+                    ownerId: req.user!.id,
                     ownerEmail: req.user!.email,
                     ownerName,
                     course,
@@ -133,7 +133,7 @@ router.get("/", authenticateToken, async (_req: AuthRequest, res: Response): Pro
 // GET /api/slots/created
 router.get("/created", authenticateToken, requireOwner, async (req: AuthRequest, res: Response): Promise<void> => {
     const slots = db.collection("slots");
-    const mySlots = await slots.find({ ownerId: new ObjectId(req.user!.id) }).toArray();
+    const mySlots = await slots.find({ ownerId: req.user!.id }).toArray();
     res.json(mySlots);
 });
 

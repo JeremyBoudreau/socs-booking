@@ -57,7 +57,7 @@ const MeetingRequests = ({ onChange }: Input) => {
           <div className="row-left">
             <div className="appointment-info">
               <div className="title">
-                {request.course.toUpperCase()} · {request.createdBy.name}
+                {request.course.toUpperCase()} · {request.bookedBy.name}
               </div>
               <div className="info">
                 {(() => { const { month, day } = isoToMonthDay(request.start); return `${month} ${day}`; })()} at {displayTime(request.start)}

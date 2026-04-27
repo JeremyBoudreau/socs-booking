@@ -21,11 +21,7 @@ const toSlot = (r: RequestSlot): Slot => ({
   type: "1-on-1 Meeting",
   status: "booked",
   createdAt: r.createdAt,
-  bookedBy: {
-    userId: r.createdBy.userId,
-    name: r.createdBy.name,
-    email: r.createdBy.email,
-  },
+  bookedBy: { userId: r.bookedBy.userId, name: r.bookedBy.name, email: r.bookedBy.email },
 });
 
 const Dashboard: React.FC = () => {

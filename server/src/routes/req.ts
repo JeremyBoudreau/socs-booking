@@ -49,7 +49,7 @@ router.post(
       type: "request",
       status: "pending",
 
-      createdBy: {
+      bookedBy: {
         userId: user.id,
         name: `${dbUser["firstName"]} ${dbUser["lastName"]}`,
         email: user.email,
@@ -80,7 +80,7 @@ router.get(
     }
     const requests = await db
       .collection("requests")
-      .find({ "createdBy.userId": user.id })
+      .find({ "bookedBy.userId": user.id })
       .toArray();
     res.json(requests);
   }
@@ -167,7 +167,7 @@ router.delete(
       res.status(404).json({ error: "Request not found" });
       return;
     }
-    if (request["createdBy"].userId !== user.id) {
+    if (request["bookedBy"].userId !== user.id) {
       res.status(403).json({ error: "Not your request" });
       return;
     }

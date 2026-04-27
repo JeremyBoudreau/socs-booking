@@ -73,7 +73,7 @@ const Meetings: React.FC = () => {
                   <div className="row-left">
                     <div className="appointment-info">
                       <div className="title">
-                        {req.course.toUpperCase()} · {req.createdBy.name}
+                        {req.course.toUpperCase()} · {req.bookedBy.name}
                       </div>
                       <div className="info">
                         {(() => { const { month, day } = isoToMonthDay(req.start); return `${month} ${day}`; })()} at {displayTime(req.start)}
