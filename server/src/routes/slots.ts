@@ -21,6 +21,19 @@ router.post("/", authenticateToken, requireOwner, async (req: AuthRequest, res: 
         return;
     }
 
+    const todayStr = new Date().toLocaleDateString("en-CA");
+    if ((startDate as string) < todayStr) {
+        res.status(400).json({ error: "Start date cannot be in the past" });
+        return;
+    }
+
+    const startDayOfWeek = new Date((startDate as string) + "T00:00:00").getDay();
+    const selectedDays = (timeSlots as { day: number }[]).map((s) => s.day);
+    if (!selectedDays.includes(startDayOfWeek)) {
+        res.status(400).json({ error: "Start date must fall on one of the selected days" });
+        return;
+    }
+
     const users = db.collection("users");
     const owner = await users.findOne({ _id: new ObjectId(req.user!.id) });
     const ownerName = owner ? `${owner["firstName"]} ${owner["lastName"]}` : req.user!.email;

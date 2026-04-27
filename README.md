@@ -28,6 +28,8 @@ ssh cs307-user@winter2026-comp307
 ```
 
 ```sh
+cd ~/app
+
 git pull origin main
 
 # rebuild backend

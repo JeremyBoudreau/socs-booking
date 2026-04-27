@@ -39,6 +39,11 @@ const ManageSlots: React.FC = () => {
 
   const handleAddTimeSlot = () => {
     if (!rAddTime || !rAddEndTime) return;
+    if (rAddTime >= rAddEndTime) {
+      setRError("End time must be after start time");
+      return;
+    }
+    setRError("");
     setRTimeSlots((prev) => [...prev, { day: rDay, time: rAddTime, endTime: rAddEndTime }]);
     setRAddTime("");
     setRAddEndTime("");
@@ -52,6 +57,17 @@ const ManageSlots: React.FC = () => {
     setRSuccess("");
     if (rTimeSlots.length === 0) {
       setRError("Add at least one time slot");
+      return;
+    }
+    const todayStr = new Date().toLocaleDateString("en-CA");
+    if (rStartDate < todayStr) {
+      setRError("Start date cannot be in the past");
+      return;
+    }
+    const startDayOfWeek = new Date(rStartDate + "T00:00:00").getDay();
+    const selectedDays = rTimeSlots.map((s) => s.day);
+    if (!selectedDays.includes(startDayOfWeek)) {
+      setRError(`Start date must fall on one of the selected days (${rTimeSlots.map((s) => DAYS[s.day]).join(", ")})`);
       return;
     }
     const res = await authFetch("/api/oh", {
@@ -132,6 +148,7 @@ const ManageSlots: React.FC = () => {
                   <input
                     type="date"
                     value={rStartDate}
+                    min={new Date().toISOString().split("T")[0]}
                     onChange={(e) => setRStartDate(e.target.value)}
                     required
                   />
