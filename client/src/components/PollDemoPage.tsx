@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { authFetch } from "../utils/fetch";
 import PollVoteRow from "./PollVoteRow";
 import "../styles/RowBox.css";
+import { useParams } from "react-router-dom";
 
 type PollSlotView = {
   id: string;
@@ -18,11 +19,14 @@ type PollView = {
 
 export default function PollDemoPage() {
   const [polls, setPolls] = useState<PollView[]>([]);
+  const { ownerId } = useParams<{ ownerId: string }>();
 
   useEffect(() => {
+    if (!ownerId) return;
+
     const fetchPolls = async () => {
       try {
-        const res = await authFetch("/api/polls");
+        const res = await authFetch(`/api/polls?ownerId=${ownerId}`);
         const data = await res.json();
         setPolls(data);
       } catch (err) {
@@ -31,7 +35,7 @@ export default function PollDemoPage() {
     };
 
     fetchPolls();
-  }, []);
+  }, [ownerId]);
 
   return (
     <div className="outer-box">

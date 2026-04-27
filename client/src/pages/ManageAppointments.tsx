@@ -8,21 +8,37 @@ import { authFetch } from "../utils/fetch";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
-const capitalize = (name: string) =>
+const capitalize = (name: string) => {
+  if (!name) return "";
   name
     .split(" ")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
     .join(" ");
+};
 
 const MailIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+  >
     <rect x="2" y="4" width="20" height="16" rx="2" />
     <polyline points="2,4 12,13 22,4" />
   </svg>
 );
 
 const TrashIcon = () => (
-  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2.5"
+  >
     <polyline points="3 6 5 6 21 6" />
     <path d="M19 6l-1 14H6L5 6" />
     <path d="M10 11v6" />
@@ -35,7 +51,9 @@ const DateBadge = ({ dateStr }: { dateStr: string }) => {
   const date = new Date(dateStr);
   return (
     <div className="slot-row-date">
-      <span className="month">{date.toLocaleString("default", { month: "short" }).toUpperCase()}</span>
+      <span className="month">
+        {date.toLocaleString("default", { month: "short" }).toUpperCase()}
+      </span>
       <span className="day">{date.getDate()}</span>
     </div>
   );
@@ -59,7 +77,9 @@ const ManageAppointments: React.FC = () => {
   }, [fetchAll]);
 
   const handleCancelMeeting = async (req: RequestSlot) => {
-    const res = await authFetch(`/api/requests/${req._id}`, { method: "DELETE" });
+    const res = await authFetch(`/api/requests/${req._id}`, {
+      method: "DELETE",
+    });
     const data = await res.json();
     if (data.ownerEmail) {
       window.location.assign(
@@ -70,7 +90,9 @@ const ManageAppointments: React.FC = () => {
   };
 
   const handleCancel = async (slot: Slot) => {
-    const res = await authFetch(`/api/oh/${slot._id}/book`, { method: "DELETE" });
+    const res = await authFetch(`/api/oh/${slot._id}/book`, {
+      method: "DELETE",
+    });
     const data = await res.json();
     if (data.ownerEmail) {
       window.location.assign(
@@ -114,18 +136,30 @@ const ManageAppointments: React.FC = () => {
               <div key={slot._id} className="slot-row">
                 <div className="row-left">
                   <DateBadge dateStr={slot.date} />
-                  <div className="appointment-info" style={{ marginLeft: "12px" }}>
+                  <div
+                    className="appointment-info"
+                    style={{ marginLeft: "12px" }}
+                  >
                     <div className="title">
                       {capitalize(slot.ownerName)} · {slot.course.toUpperCase()}
                     </div>
-                    <div className="info">{slot.time} · {slot.type}</div>
+                    <div className="info">
+                      {slot.time} · {slot.type}
+                    </div>
                   </div>
                 </div>
                 <div className="grouped-actions">
-                  <a href={`mailto:${slot.ownerEmail}`} className="button icon-btn blue" style={{ textDecoration: "none" }}>
+                  <a
+                    href={`mailto:${slot.ownerEmail}`}
+                    className="button icon-btn blue"
+                    style={{ textDecoration: "none" }}
+                  >
                     <MailIcon />
                   </a>
-                  <button className="button icon-btn red" onClick={() => handleCancel(slot)}>
+                  <button
+                    className="button icon-btn red"
+                    onClick={() => handleCancel(slot)}
+                  >
                     <TrashIcon />
                   </button>
                 </div>
@@ -135,7 +169,10 @@ const ManageAppointments: React.FC = () => {
               <div key={req._id} className="slot-row">
                 <div className="row-left">
                   <DateBadge dateStr={req.date} />
-                  <div className="appointment-info" style={{ marginLeft: "12px" }}>
+                  <div
+                    className="appointment-info"
+                    style={{ marginLeft: "12px" }}
+                  >
                     <div className="title">
                       {capitalize(req.ownerName)} · {req.course.toUpperCase()}
                     </div>
@@ -143,10 +180,17 @@ const ManageAppointments: React.FC = () => {
                   </div>
                 </div>
                 <div className="grouped-actions">
-                  <a href={`mailto:${req.ownerEmail}`} className="button icon-btn blue" style={{ textDecoration: "none" }}>
+                  <a
+                    href={`mailto:${req.ownerEmail}`}
+                    className="button icon-btn blue"
+                    style={{ textDecoration: "none" }}
+                  >
                     <MailIcon />
                   </a>
-                  <button className="button icon-btn red" onClick={() => handleCancelMeeting(req)}>
+                  <button
+                    className="button icon-btn red"
+                    onClick={() => handleCancelMeeting(req)}
+                  >
                     <TrashIcon />
                   </button>
                 </div>
@@ -173,7 +217,11 @@ const ManageAppointments: React.FC = () => {
                 </div>
                 <div className="grouped-actions">
                   <div className={`status ${req.status}`}>{req.status}</div>
-                  <a href={`mailto:${req.ownerEmail}`} className="button icon-btn blue" style={{ textDecoration: "none" }}>
+                  <a
+                    href={`mailto:${req.ownerEmail}`}
+                    className="button icon-btn blue"
+                    style={{ textDecoration: "none" }}
+                  >
                     <MailIcon />
                   </a>
                 </div>

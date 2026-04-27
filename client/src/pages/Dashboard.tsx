@@ -21,7 +21,11 @@ const toSlot = (r: RequestSlot): Slot => ({
   type: "1-on-1 Meeting",
   status: "booked",
   createdAt: r.createdAt,
-  bookedBy: { userId: r.createdBy.userId, name: r.createdBy.name, email: r.createdBy.email },
+  bookedBy: {
+    userId: r.createdBy.userId,
+    name: r.createdBy.name,
+    email: r.createdBy.email,
+  },
 });
 
 const Dashboard: React.FC = () => {
@@ -49,10 +53,14 @@ const Dashboard: React.FC = () => {
       setCreatedSlots(await created.json());
     }
 
-    const reqRes = await authFetch(role === "owner" ? "/api/requests/owner" : "/api/requests");
+    const reqRes = await authFetch(
+      role === "owner" ? "/api/requests/owner" : "/api/requests",
+    );
     if (reqRes.ok) {
       const reqs: RequestSlot[] = await reqRes.json();
-      setConfirmedMeetings(reqs.filter((r) => r.status === "confirmed").map(toSlot));
+      setConfirmedMeetings(
+        reqs.filter((r) => r.status === "confirmed").map(toSlot),
+      );
     }
   }, [role]);
 

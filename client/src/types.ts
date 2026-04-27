@@ -6,6 +6,7 @@ interface BaseSlot {
   course: string;
   date: string;
   time: string;
+  endTime?: string;
   type: string;
   createdAt: string;
 }

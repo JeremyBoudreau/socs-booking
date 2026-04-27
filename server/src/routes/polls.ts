@@ -20,14 +20,12 @@ router.post("/", async (req, res) => {
 }
 const userId = user.id;
 
-    // 1. create poll
     const poll = await db.collection("polls").insertOne({
         course,
         ownerId: userId,
         status: "open",
     });
 
-    // 2. create poll slots
     const pollSlots = slots.map((s: any) => ({
       pollId: poll.insertedId,
       start: s.start,
@@ -44,13 +42,19 @@ const userId = user.id;
 
 router.get("/", async (req, res) => {
   try {
-    // 1. get all open polls
+    const { ownerId } = req.query;
+
+    const query: any = { status: "open" };
+
+    if (ownerId) {
+      query.ownerId = ownerId; 
+    }
+
     const polls = await db
       .collection("polls")
-      .find({ status: "open" })
+      .find(query)
       .toArray();
 
-    // 2. for each poll, get its slots + votes
     const result = await Promise.all(
       polls.map(async (poll) => {
         const slots = await db
@@ -58,7 +62,6 @@ router.get("/", async (req, res) => {
           .find({ pollId: poll._id })
           .toArray();
 
-        // count votes per slot
         const formattedSlots = await Promise.all(
           slots.map(async (slot) => {
             const voteCount = await db
@@ -92,9 +95,8 @@ router.get("/", async (req, res) => {
 router.post("/:pollId/finalize", async (req, res) => {
   try {
     const { pollId } = req.params;
-    const { slotId } = req.body;
+    const { slotId, recurring, weeks } = req.body;
 
-    // 1. get selected slot
     const slot = await db.collection("pollSlots").findOne({
       _id: new ObjectId(slotId),
     });
@@ -103,26 +105,69 @@ router.post("/:pollId/finalize", async (req, res) => {
       return res.status(404).json({ error: "Slot not found" });
     }
 
-    // 2. get votes
     const votes = await db
       .collection("pollVotes")
       .find({ pollSlotId: slot._id })
       .toArray();
 
-    // 3. create real slot
-    const newSlot = await db.collection("slots").insertOne({
-      ownerId: "TEMP", // replace with actual user if needed
-      course: "", // you can fetch from poll if needed
-      start: slot.start,
-      end: slot.end,
+    if (votes.length === 0) {
+      return res.status(400).json({ error: "No votes for this slot" });
+    }
+
+    const userIds = votes.map((v) => new ObjectId(v.userId));
+
+    const users = await db
+      .collection("users")
+      .find({ _id: { $in: userIds } })
+      .toArray();
+
+    const userMap = new Map(users.map((u) => [u._id.toString(), u]));
+
+
+    //inserts[] is the slots we'll be adding at the end of this API call
+    const inserts = [];
+    const repeatCount = recurring ? weeks : 1;
+
+    const baseStart = new Date(slot.start);
+const baseEnd = new Date(slot.end);
+
+    for (let i = 0; i < repeatCount; i++) {
+  const newStart = new Date(baseStart);
+  const newEnd = new Date(baseEnd);
+
+  newStart.setDate(newStart.getDate() + i * 7);
+  newEnd.setDate(newEnd.getDate() + i * 7);
+
+  for (const vote of votes) {
+    const user = userMap.get(vote.userId.toString());
+    if (!user) continue;
+
+    inserts.push({
+      ownerId: slot.ownerId,
+      ownerName: slot.ownerName,
+      ownerEmail: slot.ownerEmail,
+
+      course: slot.course,
+      type: slot.type,
+
+      start: newStart.toISOString(),
+      end: newEnd.toISOString(),
+
       status: "booked",
-      bookedBy: votes.map((v) => ({
-        userId: v.userId,
-      })),
+
+      bookedBy: {
+        userId: user._id.toString(),
+        name: user.name,
+        email: user.email,
+      },
+
       createdAt: new Date(),
     });
+  }
+}
 
-    // 4. delete poll data
+    await db.collection("slots").insertMany(inserts);
+
     await db.collection("polls").deleteOne({
       _id: new ObjectId(pollId),
     });

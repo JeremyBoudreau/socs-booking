@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import { authFetch } from "../utils/fetch";
 import { formatTime } from "../utils/time";
+import PollDemoPage from "../components/PollDemoPage";
 import type { Slot } from "../types";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
@@ -59,32 +60,32 @@ const StaffProfile: React.FC = () => {
   };
 
   const handleRequest = async () => {
-  setError("");
+    setError("");
 
-  const res = await authFetch("/api/requests", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    ownerId,
-    course,
-    date,
-    time: formatTime(time),
-    message,
-  }),
-});
+    const res = await authFetch("/api/requests", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        ownerId,
+        course,
+        date,
+        time: formatTime(time),
+        message,
+      }),
+    });
 
-  if (res.ok) {
-    window.location.assign(
-      `mailto:${slots[0]?.ownerEmail}?subject=Meeting Request&body=${message}`,
-    );
-    navigate("/dashboard");
-  } else {
-    const data = await res.json();
-    setError(data.error || "Failed to request meeting");
-  }
-};
+    if (res.ok) {
+      window.location.assign(
+        `mailto:${slots[0]?.ownerEmail}?subject=Meeting Request&body=${message}`,
+      );
+      navigate("/dashboard");
+    } else {
+      const data = await res.json();
+      setError(data.error || "Failed to request meeting");
+    }
+  };
 
   return (
     <div className="user-page">
@@ -173,6 +174,7 @@ const StaffProfile: React.FC = () => {
               );
             })}
           </div>
+          <PollDemoPage />
         </div>
       </div>
       <Footer />

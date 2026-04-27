@@ -9,6 +9,7 @@ type Props = {
 };
 
 const capitalize = (name: string) => {
+  if (!name) return "";
   return name
     .split(" ")
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
@@ -28,7 +29,9 @@ export default function AppointmentRow({
   const day = date.getDate();
 
   const isHost = slot.ownerId === currentUserId;
-  const personName = isHost ? (slot.bookedBy?.name ?? "") : capitalize(slot.ownerName);
+  const personName = isHost
+    ? (slot.bookedBy?.name ?? "")
+    : capitalize(slot.ownerName);
 
   return (
     <div className="inner-row">
