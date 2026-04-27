@@ -97,90 +97,98 @@ router.post("/:pollId/finalize", async (req, res) => {
   try {
     const { pollId } = req.params;
     const { slotId, recurring, weeks } = req.body;
-
+ 
     const slot = await db.collection("pollSlots").findOne({
       _id: new ObjectId(slotId),
     });
-
+ 
     if (!slot) {
       return res.status(404).json({ error: "Slot not found" });
     }
-
+ 
+    const poll = await db.collection("polls").findOne({
+      _id: new ObjectId(pollId),
+    });
+ 
+    if (!poll) {
+      return res.status(404).json({ error: "Poll not found" });
+    }
+ 
+    const owner = await db.collection("users").findOne({
+      _id: new ObjectId(poll.ownerId),
+    });
+ 
+    if (!owner) {
+      return res.status(404).json({ error: "Owner not found" });
+    }
+ 
     const votes = await db
       .collection("pollVotes")
       .find({ pollSlotId: slot._id.toString() })
       .toArray();
-
+ 
     if (votes.length === 0) {
       return res.status(400).json({ error: "No votes for this slot" });
     }
-
+ 
     const userIds = votes.map((v) => v.userId).filter(Boolean);
-
+ 
     const users = await db
       .collection("users")
-      .find({ id: { $in: userIds } })
+      .find({ _id: { $in: userIds.map((id: string) => new ObjectId(id)) } })
       .toArray();
-
-    const userMap = new Map(users.map((u) => [u.id, u]));
-
+ 
+    const userMap = new Map(users.map((u) => [u._id.toString(), u]));
+ 
     const inserts: any[] = [];
     const repeatCount = recurring ? weeks : 1;
-
+ 
     const baseStart = new Date(slot.start);
     const baseEnd = new Date(slot.end);
-
+ 
     for (let i = 0; i < repeatCount; i++) {
       const newStart = new Date(baseStart);
       const newEnd = new Date(baseEnd);
-
+ 
       newStart.setDate(newStart.getDate() + i * 7);
       newEnd.setDate(newEnd.getDate() + i * 7);
-
+ 
       for (const vote of votes) {
         const user = userMap.get(vote.userId);
         if (!user) continue;
-
+ 
         inserts.push({
-          ownerId: slot.ownerId,
-          ownerName: slot.ownerName,
-          ownerEmail: slot.ownerEmail,
-
-          course: slot.course,
-          type: slot.type,
-
+          ownerId: poll.ownerId,
+          ownerName: `${owner.firstName} ${owner.lastName}`,
+          ownerEmail: owner.email,
+ 
+          course: poll.course,
+          type: "Group Meeting",
+ 
           start: newStart.toISOString(),
           end: newEnd.toISOString(),
-
+ 
           status: "booked",
-
+ 
           bookedBy: {
-            userId: user.id,
+            userId: user._id.toString(),
             name: `${user.firstName} ${user.lastName}`,
             email: user.email,
           },
-
+ 
           createdAt: new Date(),
         });
       }
     }
-
+ 
     if (inserts.length > 0) {
       await db.collection("slots").insertMany(inserts);
     }
-
-    await db.collection("polls").deleteOne({
-      _id: new ObjectId(pollId),
-    });
-
-    await db.collection("pollSlots").deleteMany({
-      pollId,
-    });
-
-    await db.collection("pollVotes").deleteMany({
-      pollId,
-    });
-
+ 
+    await db.collection("polls").deleteOne({ _id: new ObjectId(pollId) });
+    await db.collection("pollSlots").deleteMany({ pollId });
+    await db.collection("pollVotes").deleteMany({ pollId });
+ 
     res.json({ success: true });
   } catch (err) {
     console.error(err);

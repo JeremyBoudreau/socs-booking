@@ -20,7 +20,22 @@ export default function PollManager() {
   const [selected, setSelected] = useState<Record<string, string>>({});
   useEffect(() => {
     const fetchPolls = async () => {
-      const res = await authFetch("http://localhost:3000/api/polls");
+      const storedUser = localStorage.getItem("user");
+      const user = storedUser
+        ? (JSON.parse(storedUser) as {
+            id: string;
+            firstName: string;
+            lastName: string;
+            role: string;
+          })
+        : null;
+
+      if (!user) return;
+
+      const res = await authFetch(
+        `http://localhost:3000/api/polls?ownerId=${user.id}`,
+      );
+
       const data = await res.json();
       setPolls(data);
     };

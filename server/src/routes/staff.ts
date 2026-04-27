@@ -12,7 +12,7 @@ router.get("/overview", async (req, res) => {
 
     const slots = await db
       .collection("slots")
-      .find({ status: "booked" })
+      .find({ status: "active" })
       .toArray();
 
     const polls = await db
