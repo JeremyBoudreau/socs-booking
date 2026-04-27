@@ -178,7 +178,7 @@ const ManageSlots: React.FC = () => {
                 <div className="ms-pills">
                   {rTimeSlots.map((s, i) => (
                     <div key={i} className="button ms-pill">
-                      {DAYS[s.day]} {displayTime(s.time)} – {displayTime(s.endTime)}
+                      {DAYS[s.day]} {displayTime(s.time)} to {displayTime(s.endTime)}
                       <span
                         className="ms-pill-remove"
                         onClick={() => setRTimeSlots((prev) => prev.filter((_, j) => j !== i))}
@@ -218,7 +218,7 @@ const ManageSlots: React.FC = () => {
                           ? `${slot.bookedBy.name} · ${slot.course.toUpperCase()}`
                           : slot.course.toUpperCase()}
                       </div>
-                      <div className="info">{displayTime(slot.start)} – {displayTime(slot.end)} · {slot.type}</div>
+                      <div className="info">{displayTime(slot.start)} to {displayTime(slot.end)}</div>
                     </div>
                   </div>
                   <div className="grouped-actions">

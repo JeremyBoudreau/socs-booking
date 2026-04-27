@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import Sidebar from "../components/Sidebar";
 import type { Slot, RequestSlot } from "../types";
 import { authFetch } from "../utils/fetch";
-import { displayTime } from "../utils/time";
+import { displayTime, isoToMonthDay } from "../utils/time";
 import "../styles/Dashboard.css";
 import "../styles/RowBox.css";
 
@@ -119,7 +119,7 @@ const ManageAppointments: React.FC = () => {
                     <div className="title">
                       {capitalize(slot.ownerName)} · {slot.course.toUpperCase()}
                     </div>
-                    <div className="info">{displayTime(slot.start)} – {displayTime(slot.end)} · {slot.type}</div>
+                    <div className="info">{displayTime(slot.start)} to {displayTime(slot.end)} · {slot.type}</div>
                   </div>
                 </div>
                 <div className="grouped-actions">
@@ -140,7 +140,7 @@ const ManageAppointments: React.FC = () => {
                     <div className="title">
                       {capitalize(req.ownerName)} · {req.course.toUpperCase()}
                     </div>
-                    <div className="info">{displayTime(req.start)} – {displayTime(req.end)} · 1-on-1 Meeting</div>
+                    <div className="info">{displayTime(req.start)} to {displayTime(req.end)} · 1-on-1 Meeting</div>
                   </div>
                 </div>
                 <div className="grouped-actions">
@@ -165,10 +165,12 @@ const ManageAppointments: React.FC = () => {
             {pending.map((req) => (
               <div key={req._id} className="slot-row">
                 <div className="row-left">
-                  <div className="appointment-info">
+                  <DateBadge dateStr={req.start} />
+                  <div className="appointment-info" style={{ marginLeft: "12px" }}>
                     <div className="title">
                       {req.ownerName} · {req.course.toUpperCase()}
                     </div>
+                    <div className="info">{displayTime(req.start)} to {displayTime(req.end)} · 1-on-1 Meeting</div>
                     {req.message && <div className="info">{req.message}</div>}
                   </div>
                 </div>
@@ -177,6 +179,9 @@ const ManageAppointments: React.FC = () => {
                   <a href={`mailto:${req.ownerEmail}`} className="button icon-btn blue" style={{ textDecoration: "none" }}>
                     <MailIcon />
                   </a>
+                  <button className="button icon-btn red" onClick={() => handleCancelMeeting(req)}>
+                    <TrashIcon />
+                  </button>
                 </div>
               </div>
             ))}

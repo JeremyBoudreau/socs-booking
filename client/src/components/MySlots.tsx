@@ -26,9 +26,9 @@ export default function MySlots(props: Props) {
               </div>
               <div className="appointment-info" style={{ marginLeft: "12px" }}>
                 <div className="title">
-                  {slot.course.toUpperCase()} · {slot.type}
+                  {slot.course.toUpperCase()}
                 </div>
-                <div className="info">{displayTime(slot.start)} – {displayTime(slot.end)}</div>
+                <div className="info">{displayTime(slot.start)} to {displayTime(slot.end)}</div>
               </div>
             </div>
             <div className={`status ${slot.status}`}>{slot.status}</div>

@@ -68,16 +68,20 @@ const Meetings: React.FC = () => {
               {pending.length === 0 && (
                 <p style={{ color: "#b9b9b9" }}>No pending requests.</p>
               )}
-              {pending.map((req) => (
+              {pending.map((req) => {
+                const { month, day } = isoToMonthDay(req.start);
+                return (
                 <div key={req._id} className="slot-row">
                   <div className="row-left">
-                    <div className="appointment-info">
+                    <div className="slot-row-date">
+                      <span className="month">{month}</span>
+                      <span className="day">{day}</span>
+                    </div>
+                    <div className="appointment-info" style={{ marginLeft: "12px" }}>
                       <div className="title">
-                        {req.course.toUpperCase()} · {req.bookedBy.name}
+                        {req.bookedBy.name} · {req.course.toUpperCase()}
                       </div>
-                      <div className="info">
-                        {(() => { const { month, day } = isoToMonthDay(req.start); return `${month} ${day}`; })()} at {displayTime(req.start)}
-                      </div>
+                      <div className="info">{displayTime(req.start)} to {displayTime(req.end)}</div>
                       {req.message && <div className="info">{req.message}</div>}
                     </div>
                   </div>
@@ -90,7 +94,8 @@ const Meetings: React.FC = () => {
                     </button>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
 

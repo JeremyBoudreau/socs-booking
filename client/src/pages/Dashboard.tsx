@@ -90,7 +90,7 @@ const Dashboard: React.FC = () => {
             <div className="dashboard-right">
               {user?.role === "owner" ? (
                 <>
-                  <MeetingRequests onChange={fetchAll} />
+                  <MeetingRequests />
                   <MySlots slots={createdSlots} />
                   <MySessions slots={bookedSlots} />
                 </>
