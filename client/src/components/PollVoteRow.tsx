@@ -49,18 +49,16 @@ export default function PollVoteRow({ poll }: Props) {
       return;
     }
 
-    const res = await authFetch(
-      `/api/polls/${poll._id}/vote`,
-      {
-        method: "POST",
-        body: JSON.stringify({
-          slotIds: selectedSlots,
-        }),
-      },
-    );
+    const res = await authFetch(`/api/polls/${poll._id}/vote`, {
+      method: "POST",
+      body: JSON.stringify({
+        slotIds: selectedSlots,
+      }),
+    });
 
+    const data = await res.json();
     if (!res.ok) {
-      alert("Failed to submit vote");
+      alert(data.error || "Failed to submit vote");
       return;
     }
 

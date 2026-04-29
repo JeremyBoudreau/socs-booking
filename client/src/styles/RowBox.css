@@ -17,6 +17,8 @@
   margin: 0;
 }
 
+
+
 .outer-header a {
   color: #ED1B2F;
   text-decoration: none;
@@ -278,4 +280,8 @@
 
 .request-box textarea {
   min-height: 80px;
+}
+
+.red {
+   color: #ED1B2F;
 }

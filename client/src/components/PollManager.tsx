@@ -33,9 +33,7 @@ export default function PollManager() {
 
       if (!user) return;
 
-      const res = await authFetch(
-        `/api/polls?ownerId=${user.id}`,
-      );
+      const res = await authFetch(`/api/polls?ownerId=${user.id}`);
 
       const data = await res.json();
       setPolls(data);
@@ -64,19 +62,32 @@ export default function PollManager() {
       return;
     }
 
-    await authFetch(`/api/polls/${pollId}/finalize`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        slotId,
-        recurring: recurring[pollId] || false,
-        weeks: recurring[pollId] ? weeks[pollId] || 1 : 0,
-      }),
-    });
+    if (weeks[pollId] > 16 || weeks[pollId] < 1) {
+      alert("Cannot have less than 1 week or more than 16 weeks");
+      return;
+    }
 
-    setPolls((prev) => prev.filter((p) => p._id !== pollId));
+    try {
+      const res = await authFetch(`/api/polls/${pollId}/finalize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          slotId,
+          recurring: recurring[pollId] || false,
+          weeks: recurring[pollId] ? weeks[pollId] || 1 : 0,
+        }),
+      });
 
-    alert("Poll finalized!");
+      if (!res.ok) {
+        alert("Failed to finalize poll");
+      } else {
+        setPolls((prev) => prev.filter((p) => p._id !== pollId));
+        alert("Poll finalized!");
+      }
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || "Something went wrong");
+    }
   };
 
   const formatSlotTime = (start: string, end: string) => {
@@ -141,7 +152,8 @@ export default function PollManager() {
                   <input
                     type="number"
                     min={1}
-                    placeholder="Weeks After"
+                    max={16}
+                    placeholder="Weeks"
                     value={weeks[poll._id] || ""}
                     onChange={(e) =>
                       setWeeks({
@@ -166,6 +178,9 @@ export default function PollManager() {
           </div>
         </div>
       ))}
+      <div className="inner-row info">
+        Note: Once finalized, poll slots will be turned into office hour slots
+      </div>
     </div>
   );
 }

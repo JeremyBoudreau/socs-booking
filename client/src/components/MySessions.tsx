@@ -28,7 +28,9 @@ export default function MySessions({ slots }: Props) {
                 <div className="title">
                   {slot.ownerName} · {slot.course.toUpperCase()}
                 </div>
-                <div className="info">{displayTime(slot.start)} to {displayTime(slot.end)}</div>
+                <div className="info">
+                  {displayTime(slot.start)} to {displayTime(slot.end)}
+                </div>
               </div>
             </div>
           </div>

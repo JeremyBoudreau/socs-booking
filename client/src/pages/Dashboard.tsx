@@ -22,7 +22,11 @@ const toSlot = (r: RequestSlot): Slot => ({
   type: "1-on-1 Meeting",
   status: "booked",
   createdAt: r.createdAt,
-  bookedBy: { userId: r.bookedBy.userId, name: r.bookedBy.name, email: r.bookedBy.email },
+  bookedBy: {
+    userId: r.bookedBy.userId,
+    name: r.bookedBy.name,
+    email: r.bookedBy.email,
+  },
 });
 
 const Dashboard: React.FC = () => {
@@ -40,6 +44,9 @@ const Dashboard: React.FC = () => {
     : null;
 
   const role = user?.role;
+
+  const sortByDate = (a: Slot, b: Slot) =>
+    new Date(a.start).getTime() - new Date(b.start).getTime();
 
   const fetchAll = useCallback(async () => {
     const booked = await authFetch("/api/oh/booked");
@@ -84,8 +91,8 @@ const Dashboard: React.FC = () => {
                         ...createdSlots.filter((s) => s.status === "booked"),
                         ...bookedSlots,
                         ...confirmedMeetings,
-                      ]
-                    : [...bookedSlots, ...confirmedMeetings]
+                      ].sort(sortByDate)
+                    : [...bookedSlots, ...confirmedMeetings].sort(sortByDate)
                 }
                 currentUserId={user?.id}
                 showManageAll={user?.role !== "owner"}
@@ -97,7 +104,6 @@ const Dashboard: React.FC = () => {
                 <>
                   <MeetingRequests />
                   <MySlots slots={createdSlots} />
-                  <MySessions slots={bookedSlots} />
                 </>
               ) : null}
             </div>

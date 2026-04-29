@@ -104,6 +104,7 @@ router.post("/:pollId/finalize", async (req, res): Promise<void> => {
     });
  
     if (!slot) {
+      console.log("Slot not found");
       res.status(404).json({ error: "Slot not found" });
       return;
     }
@@ -113,16 +114,8 @@ router.post("/:pollId/finalize", async (req, res): Promise<void> => {
     });
  
     if (!poll) {
+      console.log("Poll not found");
       res.status(404).json({ error: "Poll not found" });
-      return;
-    }
-
-    const owner = await db.collection("users").findOne({
-      _id: new ObjectId(poll.ownerId),
-    });
- 
-    if (!owner) {
-      res.status(404).json({ error: "Owner not found" });
       return;
     }
 
@@ -132,9 +125,23 @@ router.post("/:pollId/finalize", async (req, res): Promise<void> => {
       .toArray();
  
     if (votes.length === 0) {
-      res.status(400).json({ error: "No votes for this slot" });
+      await db.collection("polls").deleteOne({ _id: new ObjectId(pollId) });
+    await db.collection("pollSlots").deleteMany({ pollId });
+    res.json({ success: true });
       return;
     }
+
+    const owner = await db.collection("users").findOne({
+      _id: new ObjectId(poll.ownerId),
+    });
+ 
+    if (!owner) {
+      console.log("Owner not found");
+      res.status(404).json({ error: "Owner not found" });
+      return;
+    }
+
+    
  
     const userIds = votes.map((v) => v.userId).filter(Boolean);
  

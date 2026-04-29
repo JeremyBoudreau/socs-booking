@@ -12,14 +12,14 @@ const MeetingRequests = () => {
     authFetch("/api/requests/owner")
       .then((r) => r.json())
       .then((data: RequestSlot[]) =>
-        setRequests(data.filter((r) => r.status === "pending"))
+        setRequests(data.filter((r) => r.status === "pending")),
       );
   }, []);
 
   return (
     <div className="outer-box">
       <div className="outer-header">
-        <h3>One-on-One Meetings</h3>
+        <h3>One-on-One Requests</h3>
         <a href="/meetings">Manage all</a>
       </div>
 
@@ -40,8 +40,12 @@ const MeetingRequests = () => {
                 <div className="title">
                   {request.bookedBy.name} · {request.course.toUpperCase()}
                 </div>
-                <div className="info">{displayTime(request.start)} to {displayTime(request.end)}</div>
-                {request.message && <div className="info">{request.message}</div>}
+                <div className="info">
+                  {displayTime(request.start)} to {displayTime(request.end)}
+                </div>
+                {request.message && (
+                  <div className="info">{request.message}</div>
+                )}
               </div>
             </div>
           </div>

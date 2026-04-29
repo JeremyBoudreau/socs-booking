@@ -15,6 +15,17 @@ export default function CreatePoll() {
     { date: "", startTime: "", endTime: "" },
   ]);
 
+  const isValidCourse = (course: string) => {
+    return /^[A-Za-z]{4} \d{3}$/.test(course);
+  };
+
+  const isFutureDate = (input: string) => {
+    const selectedDate = new Date(input);
+    const now = new Date();
+
+    return selectedDate > now;
+  };
+
   const handleChange = (index: number, field: string, value: string) => {
     const updated = [...slots];
     updated[index] = { ...updated[index], [field]: value };
@@ -32,21 +43,33 @@ export default function CreatePoll() {
   };
 
   const handleSubmit = async () => {
-    const first = slots[0];
-    if (!first.date || !first.startTime || !first.endTime) {
-      alert("Please fill in the first time slot");
-      return;
-    }
     if (!course) {
       alert("Please fill in course");
       return;
     }
 
+    if (!isValidCourse(course)) {
+      alert("Invalid course name");
+      return;
+    }
+
     for (const slot of slots) {
+      if (!slot.date || !slot.startTime || !slot.endTime) {
+        alert("Please fill in all slot information");
+        return;
+      }
       if (slot.startTime && slot.endTime && slot.startTime >= slot.endTime) {
         alert("One of your slots has end time before start time");
         return;
       }
+      if (!isFutureDate(`${slot.date}T${slot.startTime}:00`)) {
+        alert("Cannot create a poll for past dates");
+        return;
+      }
+    }
+    if (slots.length < 2) {
+      alert("Please insert at least two slots");
+      return;
     }
 
     const formattedSlots = slots.map((s) => ({
@@ -85,7 +108,7 @@ export default function CreatePoll() {
 
   return (
     <div className="poll-box">
-      <h3>Create Poll</h3>
+      <h3 className="red">Create Poll</h3>
 
       <label>Course</label>
       <input
